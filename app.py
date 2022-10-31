@@ -11,12 +11,7 @@ def home():
 
 @app.post('/')
 def loginPost():
-    print("hello   ;ajskdlfjasdfj")
-    email = request.form.get('loginEmail')
+    email = request.form.get("loginEmail")
     password = request.form.get('loginPassword')
-    if email == "" or password =="":
-        print('hi')
-        return redirect('/')
-    print(password)
     users.update({email: password})
-    return redirect('/')
+    return redirect('/') ##needs to be updated to marketplace page when that implementation is added
