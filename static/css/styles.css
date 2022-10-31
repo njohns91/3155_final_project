@@ -5,6 +5,13 @@
     margin-top: 8px;
 }
 
+.container-login{
+    margin: auto;
+    max-width: 350px;
+    text-align: center;
+    margin-top:50px;
+}
+
 form[name="create_form"] {
     margin-top: 20px;
     padding-top: 20px;
