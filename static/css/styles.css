@@ -11,3 +11,16 @@
     text-align: center;
     margin-top:50px;
 }
+
+form[name="create_form"] {
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.form-group{
+    margin-top: 20px;
+    padding-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+

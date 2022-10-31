@@ -1,0 +1,36 @@
+{% extends '_layout.html' %}
+{% block body %}
+
+<form name="create_form" action="/movies" method="post"></form>
+            <div class="file-upload-wrapper">
+                <input type="file" id="input-file-now-custom-2" class="file-upload"
+               data-height="500" />
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Title</label>
+                <input type="text" class="form-control" id="product_title" placeholder="What are you selling?">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Description</label>
+                <textarea class="form-control" id="product_description" placeholder="Decribe the item you want to sell" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Category</label>
+                <select class="form-control" id="product_category">
+                  <option value="0">Please select category</option>
+                  <option value="1">Clothes</option>
+                  <option value="2">Books</option>
+                  <option value="3">Other</option>
+                  <option value="3">Electronics</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Price</label>
+                <input type="number" class="form-control" id="product_price" placeholder="Set a price">
+              </div>
+            </form>
+
+
+
+
+{% endblock %}
