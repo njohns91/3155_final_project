@@ -24,3 +24,10 @@ form[name="create_form"] {
     padding-bottom: 20px;
 }
 
+.main-body{
+    padding-bottom: 70px;
+}
+
+.copyright{
+    color: white;
+}
