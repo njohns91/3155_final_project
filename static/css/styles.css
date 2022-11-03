@@ -1,4 +1,6 @@
 .nav-item a{
+    float: left;
+    display: block;
     font-size: 28px;
     margin-right: 10px;
     margin-left: 10px;
@@ -26,8 +28,98 @@ form[name="create_form"] {
 
 .main-body{
     padding-bottom: 70px;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .copyright{
     color: white;
+}
+
+/* Market-Place-Page */
+
+.main-body .column {
+    float: left;
+    width: 25%; 
+    padding: 12px;
+    text-align: center;
+}
+
+.column .card img {
+    width: 100%;
+    max-height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.card {
+    background-color: grey;
+    padding: 20px;
+}
+
+.card .container {
+    margin-top: 10px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Profile-Page */
+.main-body .column-left {
+    float: left;
+    width: 30%;
+    margin-top: 75px;
+    padding: 20px;
+}
+
+.main-body .column-left-hidden {
+    float: left;
+    width: 30%;
+    padding: 20px;
+    visibility: hidden;
+}
+
+.main-body .column-right {
+    float: left;
+    width: 70%;
+    margin-top: 40px;
+}
+
+.column-left .card img {
+    width: 100%;
+    max-height: auto;
+    padding: 0;
+    margin-bottom: 10px;
+    border-radius: 40%;
+}
+
+.column-right .card {
+    float: left;
+    width: 31%;
+    max-height: auto;
+    padding: 20px;
+    margin: 8px;
+    text-align: center;
+}
+
+.column-right .card img {
+    width: 100%;
+    max-height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.column-right h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.inner-row:after{
+    content: "";
+    display: table;
+    clear: both;
 }
