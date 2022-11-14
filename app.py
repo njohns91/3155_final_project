@@ -20,6 +20,23 @@ def loginPost():
     users.update({email: password})
     return redirect('/market_place') ##needs to be updated to marketplace page when that implementation is added
 
+
+@app.post('/profile')
+def create_item():
+    item_name = request.form.get('product_title')
+    item_description = request.form.get('product_description')
+    item_cetegory = request.form.get('product_category')
+    item_price = request.form.get('product_price')
+    return redirect('/profile') ##needs to be updated to profile page when that implementation is added
+
+@app.post('/profile')
+def update_item():
+    item_name = request.form.get('product_title')
+    item_description = request.form.get('product_description')
+    item_cetegory = request.form.get('product_category')
+    item_price = request.form.get('product_price')
+    return redirect('/profile') ##needs to be updated to profile page when that implementation is added
+
 @app.get('/market_place')
 def market():
     return render_template('market_place.html')
