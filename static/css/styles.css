@@ -123,3 +123,42 @@ form[name="create_form"] {
     display: table;
     clear: both;
 }
+
+/* Listing-Page */
+.main-body .listing-column-side {
+    float: left;
+    width: 20%;
+    padding: 16px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.main-body .listing-column-main {
+    float: left;
+    width: 60%;
+    padding: 16px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.listing-column-main .main-card img {
+    width: 80%;
+    max-height: auto;
+    padding: 32px;
+    margin: 2px;
+}
+
+.listing-column-main .main-card h2 {
+    font-weight: 450;
+    
+}
+
+.listing-column-main .main-card .listing-description{
+    font-size: small;
+    padding: 10px;
+}
+
+.main-card {
+    background-color: white;
+    padding: 4px;
+}
