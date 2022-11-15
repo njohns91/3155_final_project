@@ -52,3 +52,7 @@ def create():
 @app.get('/update_listing')
 def update():
     return render_template('update_listing.html')
+
+@app.get('/listing_page')
+def listing():
+    return render_template('listing_page.html')
