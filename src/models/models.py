@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import uuid
 
 db = SQLAlchemy()
 
@@ -11,21 +13,19 @@ class Listing(db.Model):
     category = db.Column(db.String, nullable = False)
     listing_image = db.Column(db.String, nullable = False)
     price = db.Column(db.Integer, nullable = False)
-    
 
-    owner_id = db.Column(db.Integer, \
+    person_id = db.Column(db.Integer, \
         db.ForeignKey('person.person_id'), nullable=False)
-    
     listing_user = db.relationship('Person', backref='listing_person')
 
-    def __init__(self, listing_description: str, title: str, category: str, listing_image: str, price: int) -> None:
+    def __init__(self, listing_description: str, title: str, category: str, listing_image: str, price: int, date_posted: datetime) -> None:
         self.listing_description = listing_description
         self.title = title
         self.category = category
         self.listing_image = listing_image
         self.price = price
-        
-
+        self.date_posted = date_posted
+        self.person_id = "f4e3966c-1ea3-4a08-bcd2-fee5a9801de8" #Needs to be changed once user sessions is implemented
 
 
 class Person(db.Model):
@@ -44,22 +44,24 @@ class Person(db.Model):
         self.profile_image = profile_image
         self.person_pass = person_pass
         self.bio = bio
-    
-        
 
 
-class Post(db.Model):
-    post_id = db.Column(db.Integer, primary_key = True)
+class Comment(db.Model):
+    comment_id = db.Column(db.Integer, primary_key = True)
     date_posted = db.Column(db.String, nullable = False)
-    contents = db.Column(db.String, nullable = False)
+    content = db.Column(db.String, nullable = False)
 
-    poster_id = db.Column(db.Integer, \
+    person_id = db.Column(db.Integer, \
         db.ForeignKey('person.person_id'), nullable=False)
-
     post_user = db.relationship('Person', backref='user_post')
 
-    
-    posts_comments_id = db.Column(db.Integer, \
+    listing_id = db.Column(db.Integer, \
         db.ForeignKey('listing.listing_id'), nullable=False)
-
     post_listing = db.relationship('Listing', backref='listed_post')
+
+    def __init__(self, comment_id: uuid, date_posted: datetime, content: str) -> None:
+        self.comment_id = comment_id
+        self.date_posted = date_posted
+        self.content = content
+        self.person_id = "f4e3966c-1ea3-4a08-bcd2-fee5a9801de8" #Needs to be changed once user sessions is implemented
+        self.listing_id = "6dbc22d7-8497-4c5e-a246-915a36644fb2" #Needs to be changed once user sessions is implemented

@@ -2,12 +2,13 @@ from urllib import request
 from flask import Flask, render_template, request, redirect, flash
 from src.models.models import db, Person, Listing
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 app = Flask(__name__)
 app.secret_key='12345'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:PASSWORD@localhost:5432/Final'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Charl0tte_isc00l@localhost:5432/Final'
 
 db.init_app(app)
 
@@ -62,6 +63,7 @@ def signupPost():
         flash(u'An account with that email already exsits', 'error')
         return redirect('/signup')
 
+    flash(u'Your account was successfully created', 'success')
     return redirect('/login')
 
 @app.get('/signout')
@@ -90,11 +92,14 @@ def create_item():
     item_description = request.form.get('product_description')
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
+    item_image = request.form.get('product_image')
 
-    listing = Listing(item_description, item_name, item_cetegory, None, item_price)
+    print(datetime.now())
+
+    listing = Listing(item_description, item_name, item_cetegory, item_image, item_price, datetime.now())
     db.session.add(listing)
     db.session.commit()
-    return redirect('/')
+    return redirect('/market_place')
 
 @app.get('/update_listing')
 def update():
