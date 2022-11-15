@@ -14,25 +14,25 @@ CREATE TABLE person (
 
 CREATE TABLE listing (
     listing_id          uuid DEFAULT uuid_generate_v4 (),
-    date_posted         VARCHAR(255) NOT NULL,
+    date_posted         TIMESTAMP() NOT NULL DEFAULT CURRENT_TIMESTAMP,
     listing_description TEXT NOT NULL,
 	title               VARCHAR(255) NOT NULL,
 	category            VARCHAR(255) NOT NULL,
 	listing_image       VARCHAR(255) NOT NULL,
     price               INT NOT NULL,
-	owner_id            uuid NOT NULL,
+	person_id           uuid NOT NULL,
     PRIMARY KEY (listing_id),
-    FOREIGN KEY (owner_id) REFERENCES person(person_id)
+    FOREIGN KEY (person_id) REFERENCES person(person_id)
 );
 
 
 CREATE TABLE comment (
-    post_id             uuid DEFAULT uuid_generate_v4 (),
-    comment_id          uuid  NULL,
-    poster_id           uuid  NULL,
-	date_posted         VARCHAR(255) NOT NULL,
+    comment_id          uuid DEFAULT uuid_generate_v4 (),
+    listing_id          uuid  NULL,
+    person_id           uuid  NULL,
+	date_posted         TIMESTAMP() NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	content             VARCHAR(255) NOT NULL,
-    PRIMARY KEY (post_id),
-    FOREIGN KEY (poster_id) REFERENCES person(person_id),
-    FOREIGN KEY (comment_id) REFERENCES listing(listing_id)
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (person_id) REFERENCES person(person_id),
+    FOREIGN KEY (listing_id) REFERENCES listing(listing_id)
 );
