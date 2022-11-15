@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Campus Market</title>
+        <link href="/static/css/styles.css" rel="stylesheet">
+        <!-- CSS only Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    </head>
+
+    <body>
+
+        <div class="container-account">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <img src="static/images/CampusMarketLogo.jpg" alt="Campus Market" width="200">
+
+		    {% block body %}{% endblock %}
+
+        </div>
+	</body>
+
+    <nav class="navbar navbar-dark bg-dark fixed-bottom">
+        <div class="container-fluid">
+          <h3 class="copyright">Campus Market&#169;</h3>
+        </div>
+      </nav>
+
+</html>
