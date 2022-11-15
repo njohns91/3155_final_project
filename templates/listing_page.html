@@ -1,13 +1,25 @@
 {% extends '_layout.html' %}
 
 {% block body %} 
-<div class="gallery-image">
-    <ul class="images">
-        <li class="image"><img src="/" alt="img"></li>
-        <li class="image"><img src="/" alt="img"></li>
-        <li class="image"><img src="/" alt="img"></li>
-        <li class="image"><img src="/" alt="img"></li>
-        <li class="image"><img src="/" alt="img"></li>
-    </ul>
+<div class="row">
+    <div class="listing-column-side">
+        <h1>Side 1</h1>
+    </div>
+
+    <div class="listing-column-main">
+        <div class="main-card">
+            <h2>"Title here"</h2>
+            <img src="/static/images/ryan-reynolds.jpeg" alt="Listing-img">
+            <h3>"Category here"</h3>
+            <div class="listing-description">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt maiores consequuntur placeat neque molestias ea dicta reiciendis ipsa incidunt. Accusamus quis sequi neque odit laudantium, obcaecati, aliquid dolore omnis pariatur placeat suscipit, vero eos officia et beatae libero. Sapiente molestias sit nesciunt quidem earum quaerat et, totam dolorum.</p>
+            </div>
+            <p class="price">"Price here"</p>
+        </div>
+    </div>
+
+    <div class="listing-column-side">
+        <h1>Side 1</h1>
+    </div>
 </div>
 {% endblock %}
