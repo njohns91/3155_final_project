@@ -8,7 +8,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key='12345'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Charl0tte_isc00l@localhost:5432/Final'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:PASSWORD@localhost:5432/Final'
 
 db.init_app(app)
 
