@@ -7,7 +7,7 @@ users={}
 
 @app.get('/')
 def home():
-    return render_template('login.html') ## Currently set to listing/market page 
+    return render_template('login.html')
 
 @app.get('/profile')
 def profile():
@@ -18,24 +18,24 @@ def loginPost():
     email = request.form.get("loginEmail")
     password = request.form.get('loginPassword')
     users.update({email: password})
-    return redirect('/market_place') ##needs to be updated to marketplace page when that implementation is added
+    return redirect('/market_place')
 
 
-@app.post('/profile')
+@app.post('/create_listing')
 def create_item():
     item_name = request.form.get('product_title')
     item_description = request.form.get('product_description')
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
-    return redirect('/profile') ##needs to be updated to profile page when that implementation is added
+    return redirect('/profile')
 
-@app.post('/profile')
+@app.post('/update_listing')
 def update_item():
     item_name = request.form.get('product_title')
     item_description = request.form.get('product_description')
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
-    return redirect('/profile') ##needs to be updated to profile page when that implementation is added
+    return redirect('/profile')
 
 @app.get('/market_place')
 def market():
