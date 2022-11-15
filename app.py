@@ -1,7 +1,15 @@
 from urllib import request
 from flask import Flask, render_template, request, redirect
+from models import db, Person, Listing
+
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Butter2002!@localhost:5432/Final'
+
+db.init_app(app)
+
+
 
 users={}
 
@@ -17,8 +25,15 @@ def profile():
 def loginPost():
     email = request.form.get("loginEmail")
     password = request.form.get('loginPassword')
-    users.update({email: password})
-    return redirect('/market_place')
+
+    person = Person('Seth', 'Seth', email, "Hello", password, "Testing bio")
+    db.session.add(person)
+    db.session.commit()
+    return redirect('market_place.html') ##needs to be updated to marketplace page when that implementation is added
+
+    
+    
+
 
 
 @app.post('/create_listing')
@@ -27,7 +42,12 @@ def create_item():
     item_description = request.form.get('product_description')
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
-    return redirect('/profile')
+
+    listing = Listing(item_description, item_name, item_cetegory, None, item_price)
+    db.session.add(listing)
+    db.session.commit()
+    return redirect('/') ##needs to be updated to profile page when that implementation is added
+
 
 @app.post('/update_listing')
 def update_item():
