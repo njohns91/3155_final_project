@@ -15,10 +15,8 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="navbar-brand" href="#">
-                        <img src="static/images/CampusMarketLogo.jpg" alt="Campus Market" width="65">
-                    </a>
+                <li class="nav-item navbar-brand">
+                    <img src="static/images/CampusMarketLogo.jpg" alt="Campus Market" width="65">
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/market_place">Marketplace</a>
@@ -39,7 +37,17 @@
     </nav>
 
     <body>
+
         <div class="container main-body">
+            
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
 		{% block body %}{% endblock %}
         </div>
 	</body>
@@ -48,6 +56,6 @@
         <div class="container-fluid">
           <h3 class="copyright">Campus Market&#169;</h3>
         </div>
-      </nav>
+    </nav>
 
 </html>
