@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import uuid
 
 db = SQLAlchemy()
 
@@ -18,14 +17,14 @@ class Listing(db.Model):
         db.ForeignKey('person.person_id'), nullable=False)
     listing_user = db.relationship('Person', backref='listing_person')
 
-    def __init__(self, listing_description: str, title: str, category: str, listing_image: str, price: int, date_posted: datetime) -> None:
+    def __init__(self, person_id: str, listing_description: str, title: str, category: str, listing_image: str, price: int, date_posted: datetime) -> None:
         self.listing_description = listing_description
         self.title = title
         self.category = category
         self.listing_image = listing_image
         self.price = price
         self.date_posted = date_posted
-        self.person_id = "f4e3966c-1ea3-4a08-bcd2-fee5a9801de8" #Needs to be changed once user sessions is implemented
+        self.person_id = person_id
 
 
 class Person(db.Model):
@@ -59,9 +58,9 @@ class Comment(db.Model):
         db.ForeignKey('listing.listing_id'), nullable=False)
     post_listing = db.relationship('Listing', backref='listed_post')
 
-    def __init__(self, comment_id: uuid, date_posted: datetime, content: str) -> None:
+    def __init__(self, person_id: str, listing_id: str, comment_id: str, date_posted: datetime, content: str) -> None:
         self.comment_id = comment_id
         self.date_posted = date_posted
         self.content = content
-        self.person_id = "f4e3966c-1ea3-4a08-bcd2-fee5a9801de8" #Needs to be changed once user sessions is implemented
-        self.listing_id = "6dbc22d7-8497-4c5e-a246-915a36644fb2" #Needs to be changed once user sessions is implemented
+        self.person_id = person_id
+        self.listing_id = listing_id
