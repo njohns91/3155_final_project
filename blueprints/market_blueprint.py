@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, flash, Blueprint, session
 from datetime import datetime
-
+from werkzeug.utils import secure_filename
+import os
 from src.models.models import db, Listing
 
 router = Blueprint('market', __name__, template_folder='templates')
@@ -31,12 +32,29 @@ def create_item():
     item_description = request.form.get('product_description')
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
-    item_image = request.form.get('product_image')
     person_id = session['person']['person_id']
 
     print(person_id)
+    
+    #save listing images
+    
+    if 'product_image' not in request.files:
+        return redirect('/create_listing')
+    
+    listing_image = request.files['product_image']
+    
+    if listing_image.filename == '':
+        return redirect('/create_listing')
+    
+    if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png']:
+        return redirect('/create_listing')
+    
+    safe_filename = secure_filename(f'{person_id}-{listing_image.filename}')
+    
+    listing_image.save(os.path.join('static','listing_images', safe_filename))
 
-    listing = Listing(person_id, item_description, item_name, item_cetegory, item_image, item_price, datetime.now())
+    listing = Listing(person_id, item_description, item_name, item_cetegory, safe_filename, item_price, datetime.now())
+    
     db.session.add(listing)
     db.session.commit()
     return redirect('/market_place')

@@ -2,9 +2,9 @@
 
 {% block body %}
 
-<form name="create_form" action="/create_listing" method="post">
+<form name="create_form" action="/create_listing" method="post" enctype="multipart/form-data">
   <div class="file-upload-wrapper">
-    <input type="file" name="product_image" id="product_image" class="file-upload"
+    <input type="file" name="product_image" id="product_image" class="file-upload" required
     data-height="500" />
   </div>
 
