@@ -8,6 +8,8 @@ class listing_repository:
 
     def specific_listing(self, listing_id):
         return Listing.query.get(listing_id)
-
-
+    
+    def profile_listing(self, person_id):
+        return Listing.query.get(person_id)
+        
 listing_repository_singleton = listing_repository()
