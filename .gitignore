@@ -3,5 +3,5 @@ __pycache__
 .vscode
 .env
 .DS_Store
-listing_images/*
-!listing_images/.gitkeep
+static/listing_images/*
+!static/listing_images/.gitkeep
