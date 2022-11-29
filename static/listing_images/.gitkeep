@@ -1,7 +1,2 @@
-venv
-__pycache__
-.vscode
-.env
-.DS_Store
 listing_images/*
 !listing_images/.gitkeep
