@@ -70,16 +70,37 @@ def create_item():
     db.session.commit()
     return redirect('/market_place')
 
+    
 @router.get('/update_listing')
 def update():
     if 'person' not in session:
         return redirect('/')
     return render_template('update_listing.html')
 
-@router.post('/update_listing')
-def update_item():
-    item_name = request.form.get('product_title')
-    item_description = request.form.get('product_description')
-    item_cetegory = request.form.get('product_category')
-    item_price = request.form.get('product_price')
-    return redirect('/profile')
+@router.post('/update_listing/<int:listing_id>')
+def update_item(listing_id):
+
+    post_to_update = Listing.query.get(listing_id)
+
+
+    if request.method == 'POST':
+         post_to_update.listing_description = request.form.get('product_description')
+         post_to_update.title = request.form.get('product_title')
+         post_to_update.category = request.form.get('product_category')
+         post_to_update.price = request.form.get('product_price')
+         try:
+            db.session.commit()
+            return redirect('/profile')
+         except:
+            return "There was an issue"
+    else:
+        return render_template('/update_profile', post_to_update = post_to_update)
+
+
+        
+
+
+
+    
+
+    
