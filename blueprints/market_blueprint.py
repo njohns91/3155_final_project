@@ -57,7 +57,7 @@ def create_item():
     if listing_image.filename == '':
         return redirect('/create_listing')
     
-    if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png']:
+    if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png', 'webp']:
         return redirect('/create_listing')
     
     safe_filename = secure_filename(f'{person_id}-{listing_image.filename}')
