@@ -72,3 +72,9 @@ def update_item():
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
     return redirect('/profile')
+
+@router.get('/update_profile')
+def update_profile():
+    if 'person' not in session:
+        return redirect('/')
+    return  render_template('update_profile.html')
