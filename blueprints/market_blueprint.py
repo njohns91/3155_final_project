@@ -1,5 +1,7 @@
 from flask import render_template, request, redirect, flash, Blueprint, session
 from datetime import datetime
+from src.repositories.listing_repository import listing_repository_singleton
+from werkzeug.utils import secure_filename
 from werkzeug.utils import secure_filename
 import os
 from src.models.models import db, Listing
@@ -12,13 +14,22 @@ router = Blueprint('market', __name__, template_folder='templates')
 def market():
     if 'person' not in session:
         return redirect('/')
-    return render_template('market_place.html')
+    all_listings = listing_repository_singleton.get_all_listing()
+    return render_template('market_place.html', market=all_listings)
 
 @router.get('/listing_page')
 def listing():
     if 'person' not in session:
         return redirect('/')
     return render_template('listing_page.html')
+
+
+@router.get('/listing_page/<listing_id>')
+def listing_display(listing_id):
+    single_listing = listing_repository_singleton.specific_listing(listing_id)
+    return render_template('listing_page.html', Listing=single_listing)
+
+
 
 @router.get('/create_listing')
 def create():
@@ -46,7 +57,7 @@ def create_item():
     if listing_image.filename == '':
         return redirect('/create_listing')
     
-    if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png']:
+    if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png', 'webp']:
         return redirect('/create_listing')
     
     safe_filename = secure_filename(f'{person_id}-{listing_image.filename}')
