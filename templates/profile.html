@@ -4,25 +4,32 @@
 <div class="row">
     <div class="column-left">
         <div class="card">
-            <img src="/static/images/ryan-reynolds.jpeg" alt="Profile-img">
-            <p>Ryan Reynolds</p>
+            {% if Person.profile_image %}
+            <img src="/static/profile_images/{{Person.profile_image}}" alt="Profile-img">
+            {% else %}
+            <img src="/static/profile_images/ryan-reynolds.jpeg" alt="Profile-img">
+            {% endif %}
+            <p>{{Person.first_name}} {{Person.last_name}}</p>
             <a href="/create_listing">Create new listing</a>
             <a href="/update_listing">Update previous listing</a>
         </div>
     </div>
-
+    
     <div class="column-right">
         <h1>My Listings</h1>
         <div class="inner-row">
+            {% for Listing in user_list %}
             <div class="card">
-                <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
+                <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
                 <div class="container">
-                    <p></p>
-                    <p></p>
+                    <p>{{Listing.title}}</p>
+                    <p>${{Listing.price}}</p>
                     <a href="/listing_page">User</a>
                 </div>  
             </div>
+            {% endfor %}
         </div>
     </div>
+    
 </div>
 {% endblock %}
