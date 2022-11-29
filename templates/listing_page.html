@@ -8,13 +8,16 @@
 
     <div class="listing-column-main">
         <div class="main-card">
-            <h2>"Title here"</h2>
-            <img src="/static/images/ryan-reynolds.jpeg" alt="Listing-img">
-            <h3>"Category here"</h3>
+            <h2>{{Listing.title}}</h2>
+            <img src="/static/images/ps5_example.webp" alt="Listing-img">
+            <h3>{{Listing.category}}</h3>
             <div class="listing-description">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt maiores consequuntur placeat neque molestias ea dicta reiciendis ipsa incidunt. Accusamus quis sequi neque odit laudantium, obcaecati, aliquid dolore omnis pariatur placeat suscipit, vero eos officia et beatae libero. Sapiente molestias sit nesciunt quidem earum quaerat et, totam dolorum.</p>
+                <p>{{Listing.listing_description}}</p>
             </div>
-            <p class="price">"Price here"</p>
+            <div class="price-date-labels">
+                <p class="price">${{Listing.price}}</p>
+                <p class="date-posted">{{Listing.date_posted}}</p>
+            </div>
         </div>
     </div>
 

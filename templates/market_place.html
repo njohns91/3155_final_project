@@ -1,95 +1,21 @@
 {% extends '_layout_pages.html'%}
 
 {% block body %} 
+
 <div class="row">
+    {% for Listing in market %}
     <div class="column">
         <div class="card" href>
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
+            <img src="/static/images/ps5_example.webp" alt="item-img">
             <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
+                <p>{{Listing.category}}</p>
+                <p>{{Listing.title}}</p>
+                <p>${{Listing.price}}</p>
+                <p>{{Listing.date_posted}}</p>
+                <a href="/listing_page/{{Listing.listing_id}}">User</a>
             </div>  
         </div>
     </div>
-
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
-
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
-
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
-
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
-
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
-
-    <div class="column">
-        <div class="card">
-            <img src="/static/images/CampusMarketLogo.jpg" alt="item-img">
-            <div class="container">
-                <p>Listing Title</p>
-                <p>Price</p>
-                <a href="/profile">User</a>
-            </div>  
-        </div>
-    </div>
+    {% endfor %}
 </div>
 {% endblock %}
