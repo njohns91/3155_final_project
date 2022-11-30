@@ -46,9 +46,11 @@ def create_item():
     listing_image = request.files['product_image']
     
     if listing_image.filename == '':
+        flash(f'Must include file for image', 'error')
         return redirect('/create_listing')
     
     if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png', 'webp']:
+        flash(f'File must be jpg, jpeg, png, or webp', 'error')
         return redirect('/create_listing')
     
     safe_filename = secure_filename(f'{person_id}-{listing_image.filename}')
@@ -59,6 +61,7 @@ def create_item():
     
     db.session.add(listing)
     db.session.commit()
+    flash(f'Listing "{item_name}" was updated', 'success')
     return redirect('/market_place')
 
     
@@ -86,20 +89,21 @@ def update_item(listing_id):
     listing_image = request.files['product_image']
     
     if listing_image.filename == '':
-        return redirect('/create_listing')
-    
+        flash(f'Must include file for image', 'error')
+        return redirect(f'/update_listing/{listing_id}')
     if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png', 'webp']:
-        return redirect('/create_listing')
+        flash(f'File must be jpg, jpeg, png, or webp', 'error')
+        return redirect(f'/update_listing/{listing_id}')
     
     safe_filename = secure_filename(f'{post_to_update.person_id}-{listing_image.filename}')
-    
     listing_image.save(os.path.join('static','listing_images', safe_filename))
 
     post_to_update.listing_image = safe_filename
     
     try:
         db.session.commit()
+        flash(f'Listing "{post_to_update.title}" was updated', 'success')
         return redirect('/profile')
     except Exception as e:
-        print(e)
-        return redirect('/profile')
+        flash(f'{e}', 'error')
+        return redirect(f'/update_listing/{listing_id}')
