@@ -11,7 +11,6 @@
             {% endif %}
             <p>{{Person.first_name}} {{Person.last_name}}</p>
             <a href="/create_listing">Create new listing</a>
-            <a href="/update_listing">Update previous listing</a>
         </div>
     </div>
     
@@ -24,7 +23,8 @@
                 <div class="container">
                     <p>{{Listing.title}}</p>
                     <p>${{Listing.price}}</p>
-                    <a href="/listing_page">User</a>
+                    <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
+                    <a href="/update_listing/{{Listing.listing_id}}">Update</a>
                 </div>  
             </div>
             {% endfor %}
