@@ -2,3 +2,6 @@ venv
 __pycache__
 .vscode
 .env
+.DS_Store
+static/listing_images/*
+!static/listing_images/.gitkeep
