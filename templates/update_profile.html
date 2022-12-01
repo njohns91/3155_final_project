@@ -12,4 +12,35 @@
 <br>
 <h1>Update Profile</h1>
 
+<form action="/update_profile" method="post">
+
+    <div class="udp">
+        <label for="updateFirst" class="form-label">First Name</label>
+        <input type="text" class="form-control" name="updateFirst" id="updateFirst" aria-describedby="updateFirst">
+    </div>
+
+    <div class="udp">
+        <label for="updateLast" class="form-label">Last Name</label>
+        <input type="text" class="form-control" name="updateLast" id="updateLast" aria-describedby="updateLast">
+    </div>
+    
+    <div class="udp">
+    <label for="updateEmail" class="form-label">Email address</label>
+    <input type="email" class="form-control" name="updateEmail" id="updateEmail" aria-describedby="updateEmail">
+    </div>
+
+    <div class="udp">
+    <label for="updatePassword" class="form-label">Password</label>
+    <input type="password" class="form-control" name="updatePassword" id="updatePassword" aria-describedby="updatePassword">
+    </div> <br>
+
+    <div class="updatePicture">
+        <input type="file" name="updatePicture" id="updatePicture" class="file-upload" required
+        data-height="500" />
+    </div> <br>
+
+    <button type="submit" class="btn btn-primary">Update Account</button>
+
+</form>
+
 {% endblock %}

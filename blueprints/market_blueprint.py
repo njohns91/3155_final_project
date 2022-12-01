@@ -78,3 +78,13 @@ def update_profile():
     if 'person' not in session:
         return redirect('/')
     return  render_template('update_profile.html')
+
+@router.post('/update_profile')
+def updated_profile():
+    name_first = request.form.get('updateFirst')
+    name_last = request.form.get('updateLast')
+    email = request.form.get('updateEmail')
+    password = request.form.get('updatePassword')
+    db.session.add(name_first)
+    db.session.commit()
+    return redirect('/profile')
