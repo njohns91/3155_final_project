@@ -19,7 +19,7 @@ CREATE TABLE listing (
 	title               VARCHAR(255) NOT NULL,
 	category            VARCHAR(255) NOT NULL,
 	listing_image       VARCHAR(255) NOT NULL,
-    price               INT NOT NULL,
+    price               MONEY NOT NULL,
 	person_id           uuid NOT NULL,
     PRIMARY KEY (listing_id),
     FOREIGN KEY (person_id) REFERENCES person(person_id)
