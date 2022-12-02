@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.utils import secure_filename
 import os
 from src.models.models import db, Listing
+from forms import SearchForm
 
 router = Blueprint('market', __name__, template_folder='templates')
 
@@ -107,3 +108,15 @@ def update_item(listing_id):
     except Exception as e:
         flash(f'{e}', 'error')
         return redirect(f'/update_listing/{listing_id}')
+
+
+@router.post('/search')
+def search():
+    form = SearchForm()
+    listings = Listing.query
+    if form.validate_on_submit():
+        listing_searched = form.searched.data
+        listings = listings.filter(Listing.title.like('%' + listing_searched + '%'))
+        listings = listings.order_by(Listing.title).all()
+        return render_template('search.html', form=form, searched = listing_searched, listings=listings)
+    
