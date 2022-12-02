@@ -119,4 +119,4 @@ def search():
         listings = listings.filter(Listing.title.like('%' + listing_searched + '%'))
         listings = listings.order_by(Listing.title).all()
         return render_template('search.html', form=form, searched = listing_searched, listings=listings)
-    pass
+    
