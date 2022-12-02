@@ -10,6 +10,8 @@ from blueprints.session_blueprint import router as session_blueprint
 from blueprints.market_blueprint import router as market_blueprint
 from blueprints.profile_blueprint import router as profile_blueprint
 
+from forms import SearchForm
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -34,3 +36,8 @@ app.register_blueprint(market_blueprint)
 #Profile
 
 app.register_blueprint(profile_blueprint)
+
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
