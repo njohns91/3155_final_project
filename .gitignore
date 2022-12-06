@@ -5,3 +5,5 @@ __pycache__
 .DS_Store
 static/listing_images/*
 !static/listing_images/.gitkeep
+static/profile_images/*
+!static/profile_images/.gitkeep

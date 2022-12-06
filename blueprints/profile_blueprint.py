@@ -52,7 +52,7 @@ def updates_profile(person_id):
 
     try:
         db.session.commit()
-        flash("Profile Updated")
+        flash("Profile Updated", 'success')
         return redirect('/profile')
     except Exception as e:
         flash(f'{e}', 'error')
