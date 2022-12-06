@@ -12,34 +12,34 @@
 <br>
 <h1>Update Profile</h1>
 
-<form action="/update_profile" method="post">
+<form action="/update_profile/{{profile_to_update.person_id}}" method="post" enctype="multipart/form-data">
 
     <div class="udp">
         <label for="updateFirst" class="form-label">First Name</label>
-        <input type="text" class="form-control" name="updateFirst" id="updateFirst" aria-describedby="updateFirst">
+        <input type="text" class="form-control" name="updateFirst" id="updateFirst" aria-describedby="updateFirst" value="{{profile_to_update.first_name}}">
     </div>
 
     <div class="udp">
         <label for="updateLast" class="form-label">Last Name</label>
-        <input type="text" class="form-control" name="updateLast" id="updateLast" aria-describedby="updateLast">
-    </div>
-    
-    <div class="udp">
-    <label for="updateEmail" class="form-label">Email address</label>
-    <input type="email" class="form-control" name="updateEmail" id="updateEmail" aria-describedby="updateEmail">
+        <input type="text" class="form-control" name="updateLast" id="updateLast" aria-describedby="updateLast" value="{{profile_to_update.last_name}}">
     </div>
 
     <div class="udp">
-    <label for="updatePassword" class="form-label">Password</label>
+    <label for="updatePassword" class="form-label">New Password</label>
     <input type="password" class="form-control" name="updatePassword" id="updatePassword" aria-describedby="updatePassword">
     </div> <br>
 
     <div class="updatePicture">
+        <p>
+            Update Profile Picture
+        </p>
         <input type="file" name="updatePicture" id="updatePicture" class="file-upload"
         data-height="500" />
     </div> <br>
 
     <button type="submit" class="btn btn-primary">Update Account</button>
+    
+    <button type="button" class="btn btn-danger">DELETE ACCOUNT</button>
 
 </form>
 

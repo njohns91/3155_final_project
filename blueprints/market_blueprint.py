@@ -114,17 +114,3 @@ def updated_item(listing_id):
         flash(f'{e}', 'error')
         return redirect(f'/update_listing/{listing_id}')
 
-@router.get('/update_profile')
-def update_profile():
-    if 'person' not in session:
-        return redirect('/')
-    return  render_template('update_profile.html')
-
-@router.post('/update_profile')
-def updated_profile():
-    name_first = request.form.get('updateFirst')
-    name_last = request.form.get('updateLast')
-    email = request.form.get('updateEmail')
-    password = request.form.get('updatePassword')
-    return redirect('/profile')
-
