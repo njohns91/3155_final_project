@@ -71,10 +71,16 @@ def update(listing_id):
     
     post_to_update = Listing.query.get(listing_id)
 
-    return render_template('update_listing.html', post_to_update = post_to_update)
+@router.post('/update_listing')
+def update_item():
+    item_name = request.form.get('product_title')
+    item_description = request.form.get('product_description')
+    item_cetegory = request.form.get('product_category')
+    item_price = request.form.get('product_price')
+    return redirect('/profile')
 
 @router.post('/update_listing/<listing_id>')
-def update_item(listing_id):
+def updated_item(listing_id):
     if 'person' not in session:
         return redirect('/')
 
@@ -106,7 +112,6 @@ def update_item(listing_id):
     except Exception as e:
         flash(f'{e}', 'error')
         return redirect(f'/update_listing/{listing_id}')
-
 
 @router.post('/search')
 def search():
@@ -140,4 +145,3 @@ def delete(listing_id):
     except Exception as e:
         flash(f'{e}', 'error')
         return redirect('/profile')
-    
