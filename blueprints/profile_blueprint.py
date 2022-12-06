@@ -39,8 +39,10 @@ def updates_profile(person_id):
     #Password Hashing
     passw = request.form.get('updatePassword')
     profile_to_update.password = ''
-    hashed_bytes = bcrypt.generate_password_hash(passw, int(os.getenv('BYCRYPT_ROUNDS')))
-    profile_to_update.person_pass = hashed_bytes.decode('utf-8')
+    if passw != '':
+        hashed_bytes = bcrypt.generate_password_hash(passw, int(os.getenv('BYCRYPT_ROUNDS')))
+        profile_to_update.person_pass = hashed_bytes.decode('utf-8')
+    
 
     profile_image = request.files['updatePicture']
     
