@@ -127,3 +127,4 @@ def updated_profile():
     email = request.form.get('updateEmail')
     password = request.form.get('updatePassword')
     return redirect('/profile')
+
