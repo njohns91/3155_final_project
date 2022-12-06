@@ -120,3 +120,24 @@ def search():
         listings = listings.order_by(Listing.title).all()
         return render_template('search.html', form=form, searched = listing_searched, listings=listings)
     
+@router.get('/delete_listing/<listing_id>')
+def delete(listing_id):
+    if 'person' not in session:
+        return redirect('/')
+    listing_to_delete = Listing.query.get(listing_id)
+    
+    listing_to_delete.listing_description = request.form.get('product_description')
+    listing_to_delete.title = request.form.get('product_title')
+    listing_to_delete.category = request.form.get('product_category')
+    listing_to_delete.price = request.form.get('product_price')
+
+    try:
+        print(listing_to_delete)
+        db.session.delete(listing_to_delete)
+        db.session.commit()
+        flash('Listing deleted successfully!')
+        return redirect('/profile')
+    except Exception as e:
+        flash(f'{e}', 'error')
+        return redirect('/profile')
+    
