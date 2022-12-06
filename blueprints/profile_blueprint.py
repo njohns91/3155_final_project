@@ -7,8 +7,6 @@ from werkzeug.utils import secure_filename
 
 router = Blueprint('profile', __name__, template_folder='templates')
 
-
-
 @router.get('/profile')
 def profile(): #person_id from current user session
     if 'person' not in session:
@@ -70,9 +68,6 @@ def delete(person_id):
         db.session.delete(listing)
 
     db.session.commit()
-    
-    
-    
     
     try:
         db.session.delete(profile_to_delete)
