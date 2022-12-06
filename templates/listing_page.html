@@ -18,6 +18,41 @@
                 <p class="price">${{Listing.price}}</p>
                 <p class="date-posted">{{Listing.date_posted}}</p>
             </div>
+            <div class="collapse" id="comments-{{Listing.listing_id}}">
+                <div class="card">
+                    <div class="card body>" id="comment-expanded-{{Listing.listing_id}}">
+                        {% for comment in Listing.comments%}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                            <a href="/profile/{{comment.post_user.first_name + comment.post_user.last_name}}">{{comment.post_user.first_name + comment.post_user.last_name}} </a>: {{comment.content}}
+                            </div>
+                            <div>
+                                <small class="text-muted">
+                                    {{comment.date_posted}}
+                                </small>
+                            </div>
+                        </div>
+                        
+                        {% endfor %}
+                    </div>
+                </div>
+                
+            </div>
+            <p class="card-text">
+            {% if Listing.comments|length > 0 %}
+            <a data-bs-toggle="collapse" href="#comments-{{Listing.listing_id}}" role="button">
+              <button>View {{Listing.comments|length}} Comments </button>
+            </a>
+            {% else %}
+            <small class="text-muted">No comments</small>
+            {% endif %}
+            </p>
+            <form class="input-group mb-3" method = 'POST' action="/create-comment/{{Listing.listing_id}}">
+                <input type="text" id="text" name="text" class="form-control" placeholder="Comment"/>
+                <button type="submit" class="btn btn-primary">Comment</button>
+
+
+            </form>
         </div>
     </div>
 

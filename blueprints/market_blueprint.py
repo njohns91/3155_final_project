@@ -4,7 +4,7 @@ from src.repositories.listing_repository import listing_repository_singleton
 from werkzeug.utils import secure_filename
 from werkzeug.utils import secure_filename
 import os
-from src.models.models import db, Listing
+from src.models.models import db, Listing, Person, Comment
 from forms import SearchForm
 
 router = Blueprint('market', __name__, template_folder='templates')
@@ -62,6 +62,25 @@ def create_item():
     db.session.commit()
     flash(f'Listing "{item_name}" was created', 'success')
     return redirect('/market_place')
+
+
+
+@router.post('/create-comment/<listing_id>')
+def create_comment(listing_id):
+    text = request.form.get('text')
+    person_id = session['person']['person_id']
+    
+
+    if not text:
+        flash('Comment cannot be empty.', category='error')
+    else:
+        listing = Listing.query.get(listing_id)
+        comment = Comment(person_id, listing_id, datetime.now(), text)
+        db.session.add(comment)
+        db.session.commit()
+        
+    return redirect('/market_place')
+
 
 
 @router.get('/update_listing/<listing_id>')
