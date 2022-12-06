@@ -131,7 +131,6 @@ def delete(listing_id):
     listing_to_delete.price = request.form.get('product_price')
 
     try:
-        print(listing_to_delete)
         db.session.delete(listing_to_delete)
         db.session.commit()
         flash('Listing deleted successfully!', 'success')
