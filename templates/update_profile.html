@@ -38,9 +38,11 @@
     </div> <br>
 
     <button type="submit" class="btn btn-primary">Update Account</button>
-    
-    <button type="button" class="btn btn-danger">DELETE ACCOUNT</button>
 
+</form>
+
+<form action="/delete_profile/{{profile_to_update.person_id}}" method="get">
+<button type="submit" class="btn btn-danger">DELETE ACCOUNT AND ALL LISTINGS</button>
 </form>
 
 {% endblock %}

@@ -7,8 +7,6 @@ from werkzeug.utils import secure_filename
 
 router = Blueprint('profile', __name__, template_folder='templates')
 
-
-
 @router.get('/profile')
 def profile(): #person_id from current user session
     if 'person' not in session:
@@ -57,3 +55,26 @@ def updates_profile(person_id):
     except Exception as e:
         flash(f'{e}', 'error')
         return redirect(f'/update_profile/{person_id}')
+
+@router.get('/delete_profile/<person_id>')
+def delete(person_id):
+    if 'person' not in session:
+        return redirect('/')
+    profile_to_delete = Person.query.get(person_id)
+
+    user_listings = listing_repository_singleton.get_user_listings(person_id)
+    
+    for listing in user_listings:
+        db.session.delete(listing)
+
+    db.session.commit()
+    
+    try:
+        db.session.delete(profile_to_delete)
+        db.session.commit()
+        session.clear()
+        flash('Listing deleted successfully!', 'success')
+        return redirect('/')
+    except Exception as e:
+        flash(f'{e}', 'error')
+        return redirect('/profile')
