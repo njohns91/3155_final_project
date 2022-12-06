@@ -4,6 +4,7 @@ from src.repositories.listing_repository import listing_repository_singleton
 from src.models.models import db, Listing, Person
 import os
 from werkzeug.utils import secure_filename
+from security import bcrypt
 
 router = Blueprint('profile', __name__, template_folder='templates')
 
@@ -34,7 +35,12 @@ def updates_profile(person_id):
 
     profile_to_update.first_name = request.form.get('updateFirst')
     profile_to_update.last_name = request.form.get('updateLast')
-    profile_to_update.password = request.form.get('updatePassword')
+    
+    #Password Hashing
+    passw = request.form.get('updatePassword')
+    profile_to_update.password = ''
+    hashed_bytes = bcrypt.generate_password_hash(passw, int(os.getenv('BYCRYPT_ROUNDS')))
+    profile_to_update.person_pass = hashed_bytes.decode('utf-8')
 
     profile_image = request.files['updatePicture']
     
