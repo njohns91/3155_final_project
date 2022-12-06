@@ -36,8 +36,6 @@ def create_item():
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
     person_id = session['person']['person_id']
-
-    print(person_id)
     
     #save listing images
     
@@ -112,6 +110,8 @@ def update_item(listing_id):
 
 @router.post('/search')
 def search():
+    if 'person' not in session:
+        return redirect('/') 
     form = SearchForm()
     listings = Listing.query
     if form.validate_on_submit():

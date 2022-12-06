@@ -2,20 +2,25 @@
 
 {% block body %} 
 
-<div class="row">
-    {% for Listing in market %}
-    <div class="column">
-        <div class="card" href>
-            <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
-            <div class="container">
-                <p>{{Listing.category}}</p>
-                <p>{{Listing.title}}</p>
-                <p>${{Listing.price}}</p>
-                <p>{{Listing.date_posted}}</p>
-                <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
-            </div>  
-        </div>
+{% if market %}
+    <div class="row">
+        {% for Listing in market %}
+            <div class="column">
+                <div class="card" href>
+                    <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
+                    <div class="container">
+                        <p>{{Listing.category}}</p>
+                        <p>{{Listing.title}}</p>
+                        <p>${{Listing.price}}</p>
+                        <p>{{Listing.date_posted}}</p>
+                        <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
+                    </div>  
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+{% else %}
+    <p>No listings in the market! Go to profile to start a listing </p>
+{% endif %}
+
 {% endblock %}

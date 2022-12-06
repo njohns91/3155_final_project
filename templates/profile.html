@@ -16,19 +16,24 @@
     
     <div class="column-right">
         <h1>My Listings</h1>
-        <div class="inner-row">
-            {% for Listing in user_list %}
-            <div class="card">
-                <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
-                <div class="container">
-                    <p>{{Listing.title}}</p>
-                    <p>${{Listing.price}}</p>
-                    <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
-                    <a href="/update_listing/{{Listing.listing_id}}">Update</a>
-                </div>  
+        {% if user_list[0] %}
+            <div class="inner-row">
+                {% for Listing in user_list %}
+                    <div class="card">
+                        <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
+                        <div class="container">
+                            <p>{{Listing.title}}</p>
+                            <p>${{Listing.price}}</p>
+                            <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
+                            <a href="/update_listing/{{Listing.listing_id}}">Update</a>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
+        {% else %}
+        <div>
+            <p>No personal listings. Create a listing from the side pannel!</p></div>
+        {% endif %}
     </div>
     
 </div>

@@ -3,19 +3,25 @@
 {% block body %} 
 
 <div class="row">
-    {% for Listing in listings %}
-    <div class="column">
-        <div class="card" href>
-            <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
-            <div class="container">
-                <p>{{Listing.category}}</p>
-                <p>{{Listing.title}}</p>
-                <p>${{Listing.price}}</p>
-                <p>{{Listing.date_posted}}</p>
-                <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
-            </div>  
+    {% if listings %}
+        {% for Listing in listings %}
+            <div class="column">
+                <div class="card" href>
+                    <img src="/static/listing_images/{{Listing.listing_image}}" alt="item-img">
+                    <div class="container">
+                        <p>{{Listing.category}}</p>
+                        <p>{{Listing.title}}</p>
+                        <p>${{Listing.price}}</p>
+                        <p>{{Listing.date_posted}}</p>
+                        <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
+                    </div>  
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="column">
+            <p>No listings match your search</p>
         </div>
-    </div>
-    {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}
