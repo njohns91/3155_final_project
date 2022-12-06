@@ -1,0 +1,2 @@
+static/profile_images/*
+!static/profile_images/.gitkeep

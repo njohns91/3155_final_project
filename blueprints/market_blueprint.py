@@ -63,7 +63,7 @@ def create_item():
     flash(f'Listing "{item_name}" was created', 'success')
     return redirect('/market_place')
 
-    
+
 @router.get('/update_listing/<listing_id>')
 def update(listing_id):
     if 'person' not in session:
@@ -107,7 +107,6 @@ def update_item(listing_id):
         flash(f'{e}', 'error')
         return redirect(f'/update_listing/{listing_id}')
 
-
 @router.post('/search')
 def search():
     if 'person' not in session:
@@ -140,4 +139,3 @@ def delete(listing_id):
     except Exception as e:
         flash(f'{e}', 'error')
         return redirect('/profile')
-    
