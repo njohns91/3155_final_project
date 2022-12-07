@@ -10,13 +10,16 @@
             <img src="/static/profile_images/ryan-reynolds.jpeg" alt="Profile-img">
             {% endif %}
             <p>{{Person.first_name}} {{Person.last_name}}</p>
+            {% if isOwner %}
             <a href="/create_listing">Create new listing</a>
             <a href="/update_profile/{{Person.person_id}}">Update Profile</a>
+            {% endif %}
         </div>
     </div>
     
     <div class="column-right">
-        <h1>My Listings</h1>
+        <h1>{{Person.first_name}}'s Listings</h1>
+        
         {% if user_list[0] %}
             <div class="inner-row">
                 {% for Listing in user_list %}
@@ -26,8 +29,11 @@
                             <p>{{Listing.title}}</p>
                             <p>${{Listing.price}}</p>
                             <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
+                            {% if isOwner %}
                             <a href="/update_listing/{{Listing.listing_id}}">Update</a>
                             <a href="/delete_listing/{{Listing.listing_id}}">Delete</a>
+                            {% endif %}
+                            
                             
                         </div>
                     </div>
