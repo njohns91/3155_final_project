@@ -131,15 +131,13 @@ def update_item(listing_id):
     post_to_update.price = request.form.get('product_price')
 
     listing_image = request.files['product_image']    
-    if listing_image.filename == '':
-        flash('Must include file for image', 'error')
-        return redirect(f'/update_listing/{listing_id}')
-    if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png', 'webp']:
-        flash('File must be jpg, jpeg, png, or webp', 'error')
-        return redirect(f'/update_listing/{listing_id}')    
-    safe_filename = secure_filename(f'{post_to_update.person_id}-{listing_image.filename}')
-    listing_image.save(os.path.join('static','listing_images', safe_filename))
-    post_to_update.listing_image = safe_filename
+    if listing_image.filename != '':
+        if listing_image.filename.rsplit('.',1)[1].lower() not in ['jpg', 'jpeg', 'png', 'webp']:
+            flash('File must be jpg, jpeg, png, or webp', 'error')
+            return redirect(f'/update_listing/{listing_id}')    
+        safe_filename = secure_filename(f'{post_to_update.person_id}-{listing_image.filename}')
+        listing_image.save(os.path.join('static','listing_images', safe_filename))
+        post_to_update.listing_image = safe_filename
     
     try:
         db.session.commit()
