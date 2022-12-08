@@ -11,7 +11,7 @@ class Listing(db.Model):
     title = db.Column(db.String, nullable = False)
     category = db.Column(db.String, nullable = False)
     listing_image = db.Column(db.String, nullable = False)
-    price = db.Column(db.Integer, nullable = False)
+    price = db.Column(db.Float, nullable = False)
 
     person_id = db.Column(db.Integer, \
         db.ForeignKey('person.person_id'), nullable=False)
