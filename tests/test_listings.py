@@ -1,12 +1,8 @@
-from flask import Flask, flash, session
-import pytest
-from datetime import datetime
-
 from flask.testing import FlaskClient
-from tests.utils import create_person, create_listing, create_comment, refresh_db
-from src.models.models import Listing, Person, Comment, db
+from tests.utils import create_listing, refresh_db
+from src.models.models import Listing
 
-#test market_place page
+#test functions work
 def test_get_all_listings(test_app: FlaskClient):
     #Setup
     refresh_db()
@@ -173,8 +169,6 @@ def test_update_listing_none(test_app: FlaskClient):
     }, follow_redirects=True)
     page_data = res.data.decode()
 
-    print(page_data)
-
     assert res.status_code == 200
     assert '<div class="error">Post doesnt exist</div>'
     assert "<h1>TestFName's Listings</h1>"
@@ -240,3 +234,70 @@ def test_delete_listing_not_owner(test_app: FlaskClient):
 
     assert res.status_code == 302
     assert test_listing
+
+#Test Not logged in
+def test_market_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get('/market_place')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+
+def test_listing_page_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get('/listing_page/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+
+def test_create_listing_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get('/create_listing')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+
+def test_update_listing_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get('/update_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+
+def test_delete_listing_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get('/delete_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+
+def test_search_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.post('/search')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"

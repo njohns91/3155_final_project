@@ -24,11 +24,12 @@ def listing_display(listing_id):
 
     person_id = session['person']['person_id']
     single_listing = listing_repository_singleton.specific_listing(listing_id)
+    listing_comments = Comment.query.filter_by(listing_id = listing_id)
 
     if single_listing == None:
         flash("Listing does not exsit", "error")
         return redirect('/market_place')
-    return render_template('listing_page.html', Listing=single_listing, person_id=person_id)
+    return render_template('listing_page.html', Listing=single_listing, person_id=person_id, comments= listing_comments)
 
 @router.get('/create_listing')
 def create():
@@ -163,13 +164,12 @@ def delete(listing_id):
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
-    
-    post_to_delete.listing_description = request.form.get('product_description')
-    post_to_delete.title = request.form.get('product_title')
-    post_to_delete.category = request.form.get('product_category')
-    post_to_delete.price = request.form.get('product_price')
 
+    listing_comments = Comment.query.filter_by(listing_id=listing_id)
+    
     try:
+        for commment in listing_comments:
+            db.session.delete(commment)
         db.session.delete(post_to_delete)
         db.session.commit()
         flash('Listing deleted successfully!', 'success')

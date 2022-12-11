@@ -5,6 +5,12 @@ from app import app
 from tests.utils import create_person, create_listing, create_comment, refresh_db
 from src.models.models import Person
 
+@pytest.fixture(scope='module')
+def sessionless_test_app():
+    with app.app_context():
+        refresh_db()
+        Person.query.delete()
+        yield app.test_client()
 
 @pytest.fixture(scope='module')
 def test_app():

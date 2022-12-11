@@ -29,7 +29,7 @@
                         {% for comment in Listing.comments%}
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                            <a href="/profile/{{comment.post_user.person_id}}">{{comment.post_user.first_name + " " + comment.post_user.last_name}} </a>: {{comment.content}}
+                            <a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}} </a>: {{comment.content}}
                             </div>
                             <div>
                                 <small class="text-muted">
