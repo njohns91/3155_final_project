@@ -13,7 +13,7 @@ def profile(person_id): #person_id from current user session
     if 'person' not in session:
         return redirect('/')
 
-    profile_person_info = Person.query.get(person_id)
+    profile_person_info = user_repository_singleton.person_info(person_id)
     user_listings = listing_repository_singleton.get_user_listings(person_id)
     
     #Determines if user is going to own profile or someone elses
