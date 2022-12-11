@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, flash, Blueprint, session, abort
 from datetime import datetime
+from src.repositories.user_repository import user_repository_singleton
 from src.repositories.listing_repository import listing_repository_singleton
+from src.repositories.comment_repository import comment_repository_singleton
 from werkzeug.utils import secure_filename
 import os
 from src.models.models import db, Listing, Person, Comment
@@ -24,7 +26,7 @@ def listing_display(listing_id):
 
     person_id = session['person']['person_id']
     single_listing = listing_repository_singleton.specific_listing(listing_id)
-    listing_comments = Comment.query.filter_by(listing_id = listing_id)
+    listing_comments = comment_repository_singleton.get_listing_comments(listing_id)
 
     if single_listing == None:
         flash("Listing does not exsit", "error")
@@ -81,7 +83,7 @@ def create_item():
 
 @router.get('/delete-comment/<comment_id>')
 def delete_comment(comment_id):
-    comment = Comment.query.filter_by(comment_id = comment_id).first()
+    comment = comment_repository_singleton.get_single_comment(comment_id)
     person_id = session['person']['person_id']
 
     if not comment:
@@ -101,9 +103,9 @@ def update(listing_id):
     if 'person' not in session:
         return redirect('/')
     
-    post_to_update = Listing.query.get(listing_id)
+    post_to_update = listing_repository_singleton.specific_listing(listing_id)
     user_person_id = session['person']['person_id']
-    profile_of_listing = Person.query.get(post_to_update.person_id)
+    profile_of_listing = user_repository_singleton.person_info(post_to_update.person_id)
 
     #Ensure user is tyring to edit own listing
     isOwner = profile_of_listing.person_id == user_person_id
@@ -119,14 +121,14 @@ def update_item(listing_id):
     if 'person' not in session:
         return redirect('/')
     
-    post_to_update = Listing.query.get(listing_id)
+    post_to_update = listing_repository_singleton.specific_listing(listing_id)
     user_person_id = session['person']['person_id']
 
     if not post_to_update:
         flash("Post doesnt exist", "error")
         return redirect(f'/profile/{user_person_id}')
 
-    profile_of_listing = Person.query.get(post_to_update.person_id)
+    profile_of_listing = user_repository_singleton.person_info(post_to_update.person_id)
     
     #Ensure user is tyring to edit own listing
     isOwner = profile_of_listing.person_id == user_person_id
@@ -166,26 +168,27 @@ def delete(listing_id):
     if 'person' not in session:
         return redirect('/')
     
-    post_to_delete = Listing.query.get(listing_id)
+    post_to_delete = listing_repository_singleton.specific_listing(listing_id)
     user_person_id = session['person']['person_id']
 
     if not post_to_delete:
         flash("Post doesnt exist", "error")
         return redirect(f'/profile/{user_person_id}')
 
-    profile_of_listing = Person.query.get(post_to_delete.person_id)
+    profile_of_listing = user_repository_singleton.person_info(post_to_delete.person_id)
 
     #Ensure user is tyring to edit own listing
     isOwner = profile_of_listing.person_id == user_person_id
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
-
-    listing_comments = Comment.query.filter_by(listing_id=listing_id)
     
     try:
-        for commment in listing_comments:
-            db.session.delete(commment)
+        #Delete users comments
+        listing_comments = comment_repository_singleton.get_listing_comments(listing_id)
+        for comment in listing_comments:
+            db.session.delete(comment)
+
         db.session.delete(post_to_delete)
         db.session.commit()
         flash('Listing deleted successfully!', 'success')
@@ -217,7 +220,7 @@ def search():
         return redirect('/') 
 
     form = SearchForm()
-    listings = Listing.query
+    listings = listing_repository_singleton.get_all_listing()
     person_id = session['person']['person_id']
 
     if form.validate_on_submit():
