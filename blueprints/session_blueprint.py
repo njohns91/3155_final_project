@@ -1,5 +1,4 @@
 import os
-
 from flask import render_template, request, redirect, flash, Blueprint, session
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
@@ -10,8 +9,6 @@ from security import bcrypt
 load_dotenv()
 
 router = Blueprint('session', __name__, template_folder='templates')
-
-
 
 @router.get('/')
 def home():
