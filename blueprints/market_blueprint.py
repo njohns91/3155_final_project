@@ -79,6 +79,22 @@ def create_item():
     flash(f'Listing "{item_name}" was created', 'success')
     return redirect(f'/listing_page/{listing.listing_id}')
 
+@router.get('/delete-comment/<comment_id>')
+def delete_comment(comment_id):
+    comment = Comment.query.filter_by(comment_id = comment_id).first()
+    person_id = session['person']['person_id']
+
+    if not comment:
+        flash("Comment does nto exist", category="error")
+    elif  person_id != comment.person_id and person_id  != comment.listing_id:
+        flash("You cannot delete comment", category="error")
+    else:
+        db.session.delete(comment)
+        db.session.commit()
+    
+        
+    return redirect(f'/market_place')
+
 @router.get('/update_listing/<listing_id>')
 def update(listing_id):
     #Ensure user is logged in

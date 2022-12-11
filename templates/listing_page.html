@@ -32,9 +32,8 @@
                             <a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}} </a>: {{comment.content}}
                             </div>
                             <div>
-                                <small class="text-muted">
-                                    {{comment.date_posted}}
-                                </small>
+                                <small class="text-muted">{{comment.date_posted}}</small>
+                                <a class="btn btn-primary" href="/delete-comment/{{comment.comment_id}}" role="button">Delete</a>
                             </div>
                         </div>
                         {% endfor %}
@@ -49,3 +48,17 @@
     </div>
 </div>
 {% endblock %}
+
+
+<div class="btn-group">
+    <button 
+      type="button" 
+      class="btn btn-sm btn-primary dropdown-toggle" 
+      data-bs-toggle="dropdown"
+    ></button>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="" class="dropdown-item">Delete</a>
+        </li>
+    </ul>
+</div>
