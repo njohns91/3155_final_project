@@ -104,6 +104,11 @@ def update_item(listing_id):
     
     post_to_update = Listing.query.get(listing_id)
     user_person_id = session['person']['person_id']
+
+    if not post_to_update:
+        flash("Post doesnt exist", "error")
+        return redirect(f'/profile/{user_person_id}')
+
     profile_of_listing = Person.query.get(post_to_update.person_id)
     
     #Ensure user is tyring to edit own listing
@@ -146,6 +151,11 @@ def delete(listing_id):
     
     post_to_delete = Listing.query.get(listing_id)
     user_person_id = session['person']['person_id']
+
+    if not post_to_delete:
+        flash("Post doesnt exist", "error")
+        return redirect(f'/profile/{user_person_id}')
+
     profile_of_listing = Person.query.get(post_to_delete.person_id)
 
     #Ensure user is tyring to edit own listing

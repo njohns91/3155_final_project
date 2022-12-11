@@ -156,6 +156,29 @@ def test_update_listing_error(test_app: FlaskClient):
     assert res.status_code == 200
     assert f'<form name="update_form" action="/update_listing/{test_listing.listing_id}" method="post" enctype="multipart/form-data">' in page_data
 
+def test_update_listing_none(test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    client, test_person, wrong_person= test_app
+
+    #Run action
+    image = './static/listing_images/water_bottle.jpg'
+
+    res = client.post(f'/update_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95', data={
+        'product_title': "Test Item Name Update",
+        'product_description': 'Test Listing Description Update',
+        'product_category': "Books",
+        'product_price': 22.22,
+        'product_image': (open(image, 'rb'), image)
+    }, follow_redirects=True)
+    page_data = res.data.decode()
+
+    print(page_data)
+
+    assert res.status_code == 200
+    assert '<div class="error">Post doesnt exist</div>'
+    assert "<h1>TestFName's Listings</h1>"
+
 def test_update_listing_not_owner(test_app: FlaskClient):
     #Setup
     refresh_db()
@@ -193,6 +216,19 @@ def test_delete_listing(test_app: FlaskClient):
     assert res.status_code == 302
     assert listings == []
 
+def test_delete_listing_none(test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    client, test_person, wrong_person= test_app
+
+    #Run Action
+    res = client.get(f'/delete_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert '<div class="error">Post doesnt exist</div>'
+    assert "<h1>TestFName's Listings</h1>"
+
 def test_delete_listing_not_owner(test_app: FlaskClient):
     refresh_db()
     client, test_person, wrong_person= test_app
@@ -202,10 +238,5 @@ def test_delete_listing_not_owner(test_app: FlaskClient):
     res = client.get(f'/delete_listing/{test_listing.listing_id}')
     page_data = res.data.decode()
 
-    print(test_listing)
-
     assert res.status_code == 302
     assert test_listing
-
-
-
