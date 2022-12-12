@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 
 from src.models.models import db, Person
+from src.repositories.user_repository import user_repository_singleton
 from security import bcrypt
 
 load_dotenv()
@@ -27,7 +28,7 @@ def loginPost():
     email = request.form.get("loginEmail")
     password = request.form.get('loginPassword')
 
-    user = Person.query.filter_by(email=email).first()
+    user = user_repository_singleton.get_person_by_email(email)
 
     if not user:
         flash(u'Account with associated email does not exsit', 'error')

@@ -1,111 +1,90 @@
 from flask.testing import FlaskClient
-from tests.utils import create_listing, refresh_db
+from tests.utils import create_listing, create_comment, refresh_db
 from src.models.models import Listing
-from src.repositories.listing_repository import listing_repository_singleton
+from src.repositories.comment_repository import comment_repository_singleton
+
 
 #test functions work
-def test_get_all_listings(test_app: FlaskClient):
-    #Setup
-    refresh_db()
-    client, test_person, wrong_person = test_app
-    test_listing = create_listing(test_person.person_id)
-
-    #Run Action
-    res = client.get('/market_place')
-    page_data = res.data.decode()
-
-    assert res.status_code == 200
-    assert f'<p>Other</p>' in page_data
-    assert f'<p>Test Item Name</p>' in page_data
-    assert f'<p>$20.02</p>' in page_data
-
-def test_get_all_listings_empty(test_app: FlaskClient):
-    #Setup
-    refresh_db()
-    client, test_person, wrong_person = test_app
-
-    #Run Action
-    res = client.get('/market_place')
-    page_data = res.data.decode()
-
-    assert res.status_code == 200
-    assert '<div class="listing-column-main">' not in page_data
-    assert '<p>No listings in the market! Go to profile to start a listing </p>'
-
-def test_get_single_listing(test_app: FlaskClient):
+def test_get_comments(test_app: FlaskClient):
     #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
     test_listing = create_listing(test_person.person_id)
+    test_comment = create_comment(test_person.person_id, test_listing.listing_id)
 
     #Run Action
     res = client.get(f'/listing_page/{test_listing.listing_id}')
     page_data = res.data.decode()
 
     assert res.status_code == 200
-    assert f'<h2>Test Item Name</h2>' in page_data
-    assert f'<img src="/static/listing_images/testImage.png" alt="Listing-img">' in page_data
-    assert f'<h3>Other</h3>' in page_data
-    assert f'<p>Test Listing Description</p>' in page_data
-    assert f'<p class="price">$20.02</p>' in page_data
-    assert f'<p class="date-posted">{test_listing.date_posted}</p>' in page_data
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName </a>: Test Comment</p>' in page_data
 
-def test_get_single_listing_302(test_app: FlaskClient):
+def test_get_comments_right_post(test_app: FlaskClient):
     #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
+    test_listing_1 = create_listing(test_person.person_id)
+    test_listing_2 = create_listing(test_person.person_id)
+    test_comment = create_comment(test_person.person_id, test_listing_1.listing_id)
 
     #Run Action
-    res = client.get(f'/listing_page/8c25c406-6e4e-4945-a9f5-22fd66f1a07d')
-    page_data = res.data.decode()
+    res1 = client.get(f'/listing_page/{test_listing_1.listing_id}')
+    page_data1 = res1.data.decode()
+    res2 = client.get(f'/listing_page/{test_listing_2.listing_id}')
+    page_data2 = res2.data.decode()
 
-    assert res.status_code == 302
+    assert res1.status_code == 200
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName </a>: Test Comment</p>' in page_data1
+    assert res2.status_code == 200
+    assert f'<p>No Comments</p>' in page_data2
 
-def test_create_listing(test_app: FlaskClient):
+def test_create_comments(test_app: FlaskClient):
     #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
+    test_listing = create_listing(test_person.person_id)
     
     #Run action
-    image = './static/listing_images/testImage.png'
-
-    res = client.post('/create_listing', data={
-        'product_title': "Test Item Name",
-        'product_description': 'Test Listing Description',
-        'product_category': "Other",
-        'product_price': 20.02,
-        'product_image': (open(image, 'rb'), image)
+    res = client.post(f'/create_comment/{test_listing.listing_id}', data={
+        'text': "Test Comment"
     }, follow_redirects=True)
     
     page_data = res.data.decode()
 
     assert res.status_code == 200
-    assert f'<h2>Test Item Name</h2>' in page_data
-    assert f'<img src="/static/listing_images/{test_person.person_id}-._static_listing_images_testImage.png" alt="Listing-img">' in page_data
-    assert f'<h3>Other</h3>' in page_data
-    assert f'<p>Test Listing Description</p>' in page_data
-    assert f'<p class="price">$20.02</p>' in page_data
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName </a>: Test Comment</p>' in page_data
 
-def test_create_listing_error(test_app: FlaskClient):
+def test_create_comment_no_text(test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    client, test_person, wrong_person= test_app
+    test_listing = create_listing(test_person.person_id)
+    
+    #Run action
+    res = client.post(f'/create_comment/{test_listing.listing_id}', data={}, follow_redirects=True)
+    page_data = res.data.decode()
+
+    assert res.status_code == 200
+    assert f'<div class="error">Comment cannot be empty.</div>' in page_data
+    assert f'<p>No Comments</p>' in page_data
+
+def test_create_comments_no_listing(test_app: FlaskClient):
     #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
     
     #Run action
-    image = './static/listing_images/testImage.png'
-
-    res = client.post('/create_listing', data={
-        'product_description': 'Test Listing Description',
-        'product_category': "Other",
-        'product_price': 20.02,
-        'product_image': (open(image, 'rb'), image)
+    res = client.post(f'/create_comment/a4561e25-efc2-4c91-af46-add1cdb1cf95', data={
+        'text': "Test Comment"
     }, follow_redirects=True)
     
     page_data = res.data.decode()
 
     assert res.status_code == 200
-    assert '<form name="create_form" action="/create_listing" method="post" enctype="multipart/form-data">' in page_data
+    assert '<div class="error">Post doesnt exist</div>'
+    assert "<h1>TestFName's Listings</h1>"
 
+""" 
 def test_update_listing(test_app: FlaskClient):
     #Setup
     client, test_person, wrong_person= test_app
@@ -195,106 +174,99 @@ def test_update_listing_not_owner(test_app: FlaskClient):
 
     assert res.status_code == 200
     assert "<h1>TestFName's Listings</h1>" in page_data
-
-def test_delete_listing(test_app: FlaskClient):
+"""
+def test_delete_comment(test_app: FlaskClient):
     #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
     test_listing = create_listing(test_person.person_id)
-
-    #Run Action
-    res = client.get(f'/delete_listing/{test_listing.listing_id}')
+    test_comment = create_comment(test_person.person_id, test_listing.listing_id)
+    
+    #Run action
+    res = client.get(f'/delete_comment/{test_listing.listing_id}/{test_comment.comment_id}')
     page_data = res.data.decode()
 
-    listings = listing_repository_singleton.get_all_listing()
+    comments = comment_repository_singleton.get_listing_comments(test_listing.listing_id)
 
     assert res.status_code == 302
-    assert listings == []
+    assert comments == []
 
-def test_delete_listing_none(test_app: FlaskClient):
+def test_delete_comment_no_comment(test_app: FlaskClient):
     #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
-
-    #Run Action
-    res = client.get(f'/delete_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    test_listing = create_listing(test_person.person_id)
+    test_comment = create_comment(test_person.person_id, test_listing.listing_id)
+    
+    #Run action
+    res = client.get(f'/delete_comment/{test_listing.listing_id}/a4561e25-efc2-4c91-af46-add1cdb1cf95')
     page_data = res.data.decode()
-
+    
     assert res.status_code == 302
-    assert '<div class="error">Post doesnt exist</div>'
-    assert "<h1>TestFName's Listings</h1>"
+    assert f'<p>You should be redirected automatically to the target URL: <a href="/listing_page/{test_listing.listing_id}">/listing_page/{test_listing.listing_id}</a>. If not, click the link.' in page_data
 
-def test_delete_listing_not_owner(test_app: FlaskClient):
+def test_delete_comment_no_listing(test_app: FlaskClient):
+    #Setup
     refresh_db()
     client, test_person, wrong_person= test_app
-    test_listing = create_listing(wrong_person.person_id)
+    
+    #Run action
+    res = client.get(f'/delete_comment/a4561e25-efc2-4c91-af46-add1cdb1cf95/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+    
+    assert res.status_code == 302
+    assert f'<p>You should be redirected automatically to the target URL: <a href="/market_place">/market_place</a>. If not, click the link.' in page_data
 
-    #Run Action
-    res = client.get(f'/delete_listing/{test_listing.listing_id}')
+def test_delete_comment_not_owner(test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    client, test_person, wrong_person= test_app
+    test_listing = create_listing(test_person.person_id)
+    test_comment = create_comment(wrong_person.person_id, test_listing.listing_id)
+    
+    #Run action
+    res = client.get(f'/delete_comment/{test_listing.listing_id}/{test_comment.comment_id}')
     page_data = res.data.decode()
 
-    listing = listing_repository_singleton.specific_listing(test_listing.listing_id)
+    comment = comment_repository_singleton.get_single_comment(test_comment.comment_id)
 
     assert res.status_code == 302
-    assert listing
+    assert comment
 
 #Test Not logged in
-def test_market_notLoggedIn(sessionless_test_app: FlaskClient):
+def test_create_comment_notLoggedIn(sessionless_test_app: FlaskClient):
     #Setup
     refresh_db()
     
     #Run Action
-    res = sessionless_test_app.get('/market_place')
+    res = sessionless_test_app.post('/create_comment/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+"""
+def test_update_comment_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get('/update_comment/a4561e25-efc2-4c91-af46-add1cdb1cf95')
+    page_data = res.data.decode()
+
+    assert res.status_code == 302
+    assert "<h1>Welcome</h1>"
+"""
+def test_delete_comment_notLoggedIn(sessionless_test_app: FlaskClient):
+    #Setup
+    refresh_db()
+    
+    #Run Action
+    res = sessionless_test_app.get(f'/delete_comment/a4561e25-efc2-4c91-af46-add1cdb1cf95/a4561e25-efc2-4c91-af46-add1cdb1cf95')
     page_data = res.data.decode()
 
     assert res.status_code == 302
     assert "<h1>Welcome</h1>"
 
-def test_listing_page_notLoggedIn(sessionless_test_app: FlaskClient):
-    #Setup
-    refresh_db()
-    
-    #Run Action
-    res = sessionless_test_app.get('/listing_page/a4561e25-efc2-4c91-af46-add1cdb1cf95')
-    page_data = res.data.decode()
-
-    assert res.status_code == 302
-    assert "<h1>Welcome</h1>"
-
-def test_create_listing_notLoggedIn(sessionless_test_app: FlaskClient):
-    #Setup
-    refresh_db()
-    
-    #Run Action
-    res = sessionless_test_app.get('/create_listing')
-    page_data = res.data.decode()
-
-    assert res.status_code == 302
-    assert "<h1>Welcome</h1>"
-
-def test_update_listing_notLoggedIn(sessionless_test_app: FlaskClient):
-    #Setup
-    refresh_db()
-    
-    #Run Action
-    res = sessionless_test_app.get('/update_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95')
-    page_data = res.data.decode()
-
-    assert res.status_code == 302
-    assert "<h1>Welcome</h1>"
-
-def test_delete_listing_notLoggedIn(sessionless_test_app: FlaskClient):
-    #Setup
-    refresh_db()
-    
-    #Run Action
-    res = sessionless_test_app.get('/delete_listing/a4561e25-efc2-4c91-af46-add1cdb1cf95')
-    page_data = res.data.decode()
-
-    assert res.status_code == 302
-    assert "<h1>Welcome</h1>"
-
-def test_search_notLoggedIn(sessionless_test_app: FlaskClient):
     #Setup
     refresh_db()
     
