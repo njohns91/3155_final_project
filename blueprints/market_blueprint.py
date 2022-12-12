@@ -207,6 +207,31 @@ def create_comment(listing_id):
         
     return redirect(f'/listing_page/{listing_id}')
 
+@router.post('/update_comment/<listing_id>/<comment_id>')
+def update_comment(listing_id, comment_id):
+    #Ensure user is logged in
+    if 'person' not in session:
+        return redirect('/')
+    
+    single_listing = listing_repository_singleton.specific_listing(listing_id)
+    if single_listing == None:
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+
+    comment = comment_repository_singleton.get_single_comment(comment_id)
+    person_id = session['person']['person_id']
+
+    if not comment:
+        flash("Comment does not exist", category="error")
+        return redirect(f'/listing_page/{listing_id}')
+    elif  person_id != comment.person_id and person_id  != comment.listing_id:
+        flash("You cannot delete comment", category="error")
+    else:
+        comment.content = request.form.get('text')
+        db.session.commit()
+        
+    return redirect(f'/listing_page/{listing_id}')
+
 @router.get('/delete_comment/<listing_id>/<comment_id>')
 def delete_comment(listing_id, comment_id):
     #Ensure user is logged in
@@ -230,7 +255,7 @@ def delete_comment(listing_id, comment_id):
         db.session.delete(comment)
         db.session.commit()
 
-    return redirect(f'/listing_page/{comment.listing_id}')
+    return redirect(f'/listing_page/{listing_id}')
 
 @router.post('/search')
 def search():
