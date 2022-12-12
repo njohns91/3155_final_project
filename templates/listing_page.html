@@ -32,9 +32,14 @@
                             <a href="/profile/{{comment.post_user.person_id}}">{{comment.post_user.first_name + " " + comment.post_user.last_name}} </a>: {{comment.content}}
                             </div>
                             <div>
-                                <small class="text-muted">
-                                    {{comment.date_posted}}
-                                </small>
+                                <small class="text-muted">{{comment.date_posted}}</small>
+                                <a class="btn btn-primary" href="/delete-comment/{{comment.comment_id}}" role="button">Delete</a>
+                            
+                                <form class="input-group mb-3" method = 'POST' action="/update-comment/{{comment.comment_id}}">
+                                    <input type="text" id="text" name="text" class="form-control" placeholder="{{comment.content}}"/>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </form>
+                            
                             </div>
                         </div>
                         {% endfor %}
@@ -49,3 +54,5 @@
     </div>
 </div>
 {% endblock %}
+
+
