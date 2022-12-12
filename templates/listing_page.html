@@ -18,7 +18,7 @@
                 <p class="price">${{Listing.price}}</p>
                 <p class="date-posted">{{Listing.date_posted}}</p>
             </div>
-            <form class="input-group mb-3" method = 'POST' action="/create-comment/{{Listing.listing_id}}">
+            <form class="input-group mb-3" method = 'POST' action="/create_comment/{{Listing.listing_id}}">
                 <input type="text" id="text" name="text" class="form-control" placeholder="Comment"/>
                 <button type="submit" class="btn btn-primary">Comment</button>
             </form>
@@ -29,13 +29,13 @@
                         {% for comment in Listing.comments%}
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                            <a href="/profile/{{comment.post_user.person_id}}">{{comment.post_user.first_name + " " + comment.post_user.last_name}} </a>: {{comment.content}}
+                                <p><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}} </a>: {{comment.content}}</p>
                             </div>
                             <div>
                                 <small class="text-muted">{{comment.date_posted}}</small>
-                                <a class="btn btn-primary" href="/delete-comment/{{comment.comment_id}}" role="button">Delete</a>
+                                <a class="btn btn-primary" href="/delete_comment/{{Listing.listing_id}}/{{comment.comment_id}}" role="button">Delete</a>
                             
-                                <form class="input-group mb-3" method = 'POST' action="/update-comment/{{comment.comment_id}}">
+                                <form class="input-group mb-3" method = 'POST' action="/update_comment/{{Listing.listing_id}}/{{comment.comment_id}}">
                                     <input type="text" id="text" name="text" class="form-control" placeholder="{{comment.content}}"/>
                                     <button type="submit" class="btn btn-primary">Update</button>
                                 </form>
