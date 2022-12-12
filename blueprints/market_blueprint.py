@@ -12,6 +12,7 @@ router = Blueprint('market', __name__, template_folder='templates')
 
 @router.get('/market_place')
 def market():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -21,6 +22,7 @@ def market():
 
 @router.get('/listing_page/<listing_id>')
 def listing_display(listing_id):
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -35,6 +37,7 @@ def listing_display(listing_id):
 
 @router.get('/create_listing')
 def create():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -43,6 +46,7 @@ def create():
 
 @router.post('/create_listing')
 def create_item():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -80,22 +84,6 @@ def create_item():
 
     flash(f'Listing "{item_name}" was created', 'success')
     return redirect(f'/listing_page/{listing.listing_id}')
-
-@router.get('/delete-comment/<comment_id>')
-def delete_comment(comment_id):
-    comment = comment_repository_singleton.get_single_comment(comment_id)
-    person_id = session['person']['person_id']
-
-    if not comment:
-        flash("Comment does nto exist", category="error")
-    elif  person_id != comment.person_id and person_id  != comment.listing_id:
-        flash("You cannot delete comment", category="error")
-    else:
-        db.session.delete(comment)
-        db.session.commit()
-    
-        
-    return redirect(f'/market_place')
 
 @router.get('/update_listing/<listing_id>')
 def update(listing_id):
@@ -197,11 +185,16 @@ def delete(listing_id):
         flash(f'{e}', 'error')
         return redirect(f'/profile/{user_person_id}')
 
-@router.post('/create-comment/<listing_id>')
+@router.post('/create_comment/<listing_id>')
 def create_comment(listing_id):
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
     
+    if not listing_repository_singleton.specific_listing(listing_id):
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+
     text = request.form.get('text')
     person_id = session['person']['person_id']
 
@@ -214,8 +207,34 @@ def create_comment(listing_id):
         
     return redirect(f'/listing_page/{listing_id}')
 
+@router.get('/delete_comment/<listing_id>/<comment_id>')
+def delete_comment(listing_id, comment_id):
+    #Ensure user is logged in
+    if 'person' not in session:
+        return redirect('/')
+    
+    single_listing = listing_repository_singleton.specific_listing(listing_id)
+    if single_listing == None:
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+
+    comment = comment_repository_singleton.get_single_comment(comment_id)
+    person_id = session['person']['person_id']
+
+    if not comment:
+        flash("Comment does not exist", category="error")
+        return redirect(f'/listing_page/{listing_id}')
+    elif  person_id != comment.person_id and person_id  != comment.listing_id:
+        flash("You cannot delete comment", category="error")
+    else:
+        db.session.delete(comment)
+        db.session.commit()
+
+    return redirect(f'/listing_page/{comment.listing_id}')
+
 @router.post('/search')
 def search():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/') 
 
