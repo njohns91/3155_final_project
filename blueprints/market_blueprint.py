@@ -1,7 +1,8 @@
-from flask import render_template, request, redirect, flash, Blueprint, session
+from flask import render_template, request, redirect, flash, Blueprint, session, abort
 from datetime import datetime
+from src.repositories.user_repository import user_repository_singleton
 from src.repositories.listing_repository import listing_repository_singleton
-from werkzeug.utils import secure_filename
+from src.repositories.comment_repository import comment_repository_singleton
 from werkzeug.utils import secure_filename
 import os
 from src.models.models import db, Listing, Person, Comment
@@ -11,6 +12,7 @@ router = Blueprint('market', __name__, template_folder='templates')
 
 @router.get('/market_place')
 def market():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -20,15 +22,22 @@ def market():
 
 @router.get('/listing_page/<listing_id>')
 def listing_display(listing_id):
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
     person_id = session['person']['person_id']
     single_listing = listing_repository_singleton.specific_listing(listing_id)
-    return render_template('listing_page.html', Listing=single_listing, person_id=person_id)
+    listing_comments = comment_repository_singleton.get_listing_comments(listing_id)
+
+    if single_listing == None:
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+    return render_template('listing_page.html', Listing=single_listing, person_id=person_id, comments= listing_comments)
 
 @router.get('/create_listing')
 def create():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -37,6 +46,7 @@ def create():
 
 @router.post('/create_listing')
 def create_item():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/')
 
@@ -45,14 +55,16 @@ def create_item():
     item_cetegory = request.form.get('product_category')
     item_price = request.form.get('product_price')
     person_id = session['person']['person_id']
-    
+
+    if person_id == None or item_description == None or item_name ==None or item_cetegory ==None or item_price == None:
+        return redirect('/create_listing')
+
     #save listing images
-    
     if 'product_image' not in request.files:
         return redirect('/create_listing')
-    
+
     listing_image = request.files['product_image']
-    
+
     if listing_image.filename == '':
         flash('Must include file for image', 'error')
         return redirect('/create_listing')
@@ -69,25 +81,9 @@ def create_item():
     
     db.session.add(listing)
     db.session.commit()
+
     flash(f'Listing "{item_name}" was created', 'success')
-    return redirect('/market_place')
-
-@router.post('/create-comment/<listing_id>')
-def create_comment(listing_id):
-    if 'person' not in session:
-        return redirect('/')
-    
-    text = request.form.get('text')
-    person_id = session['person']['person_id']
-
-    if not text:
-        flash('Comment cannot be empty.', category='error')
-    else:
-        comment = Comment(person_id, listing_id, datetime.now(), text)
-        db.session.add(comment)
-        db.session.commit()
-        
-    return redirect(f'/listing_page/{listing_id}')
+    return redirect(f'/listing_page/{listing.listing_id}')
 
 @router.post('/update-comment/<comment_id>')
 def update_comment(comment_id):
@@ -129,13 +125,12 @@ def update(listing_id):
     if 'person' not in session:
         return redirect('/')
     
-    post_to_update = Listing.query.get(listing_id)
+    post_to_update = listing_repository_singleton.specific_listing(listing_id)
     user_person_id = session['person']['person_id']
-    profile_of_listing = Person.query.get(post_to_update.person_id)
+    profile_of_listing = user_repository_singleton.person_info(post_to_update.person_id)
 
     #Ensure user is tyring to edit own listing
     isOwner = profile_of_listing.person_id == user_person_id
-    print(isOwner, profile_of_listing.person_id, user_person_id)
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
@@ -148,13 +143,17 @@ def update_item(listing_id):
     if 'person' not in session:
         return redirect('/')
     
-    post_to_update = Listing.query.get(listing_id)
+    post_to_update = listing_repository_singleton.specific_listing(listing_id)
     user_person_id = session['person']['person_id']
-    profile_of_listing = Person.query.get(post_to_update.person_id)
 
+    if not post_to_update:
+        flash("Post doesnt exist", "error")
+        return redirect(f'/profile/{user_person_id}')
+
+    profile_of_listing = user_repository_singleton.person_info(post_to_update.person_id)
+    
     #Ensure user is tyring to edit own listing
     isOwner = profile_of_listing.person_id == user_person_id
-    print(isOwner, profile_of_listing.person_id, user_person_id)
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
@@ -163,6 +162,10 @@ def update_item(listing_id):
     post_to_update.title = request.form.get('product_title')
     post_to_update.category = request.form.get('product_category')
     post_to_update.price = request.form.get('product_price')
+
+    if post_to_update.person_id == '' or post_to_update.listing_description == '' or post_to_update.title =='' or post_to_update.category =='' or post_to_update.price == '':
+        return redirect(f'/update_listing/{listing_id}')
+
 
     listing_image = request.files['product_image']    
     if listing_image.filename != '':
@@ -176,7 +179,7 @@ def update_item(listing_id):
     try:
         db.session.commit()
         flash(f'Listing "{post_to_update.title}" was updated', 'success')
-        return redirect(f'/profile/{user_person_id}')
+        return redirect(f'/listing_page/{listing_id}')
     except Exception as e:
         flash(f'{e}', 'error')
         return redirect(f'/update_listing/{listing_id}')
@@ -187,23 +190,27 @@ def delete(listing_id):
     if 'person' not in session:
         return redirect('/')
     
-    post_to_delete = Listing.query.get(listing_id)
+    post_to_delete = listing_repository_singleton.specific_listing(listing_id)
     user_person_id = session['person']['person_id']
-    profile_of_listing = Person.query.get(post_to_delete.person_id)
+
+    if not post_to_delete:
+        flash("Post doesnt exist", "error")
+        return redirect(f'/profile/{user_person_id}')
+
+    profile_of_listing = user_repository_singleton.person_info(post_to_delete.person_id)
 
     #Ensure user is tyring to edit own listing
     isOwner = profile_of_listing.person_id == user_person_id
-    print(isOwner, profile_of_listing.person_id, user_person_id)
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
     
-    post_to_delete.listing_description = request.form.get('product_description')
-    post_to_delete.title = request.form.get('product_title')
-    post_to_delete.category = request.form.get('product_category')
-    post_to_delete.price = request.form.get('product_price')
-
     try:
+        #Delete users comments
+        listing_comments = comment_repository_singleton.get_listing_comments(listing_id)
+        for comment in listing_comments:
+            db.session.delete(comment)
+
         db.session.delete(post_to_delete)
         db.session.commit()
         flash('Listing deleted successfully!', 'success')
@@ -212,13 +219,61 @@ def delete(listing_id):
         flash(f'{e}', 'error')
         return redirect(f'/profile/{user_person_id}')
 
+@router.post('/create_comment/<listing_id>')
+def create_comment(listing_id):
+    #Ensure user is logged in
+    if 'person' not in session:
+        return redirect('/')
+    
+    if not listing_repository_singleton.specific_listing(listing_id):
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+
+    text = request.form.get('text')
+    person_id = session['person']['person_id']
+
+    if not text:
+        flash('Comment cannot be empty.', category='error')
+    else:
+        comment = Comment(person_id, listing_id, datetime.now(), text)
+        db.session.add(comment)
+        db.session.commit()
+        
+    return redirect(f'/listing_page/{listing_id}')
+
+@router.get('/delete_comment/<listing_id>/<comment_id>')
+def delete_comment(listing_id, comment_id):
+    #Ensure user is logged in
+    if 'person' not in session:
+        return redirect('/')
+    
+    single_listing = listing_repository_singleton.specific_listing(listing_id)
+    if single_listing == None:
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+
+    comment = comment_repository_singleton.get_single_comment(comment_id)
+    person_id = session['person']['person_id']
+
+    if not comment:
+        flash("Comment does not exist", category="error")
+        return redirect(f'/listing_page/{listing_id}')
+    elif  person_id != comment.person_id and person_id  != comment.listing_id:
+        flash("You cannot delete comment", category="error")
+    else:
+        db.session.delete(comment)
+        db.session.commit()
+
+    return redirect(f'/listing_page/{comment.listing_id}')
+
 @router.post('/search')
 def search():
+    #Ensure user is logged in
     if 'person' not in session:
         return redirect('/') 
 
     form = SearchForm()
-    listings = Listing.query
+    listings = listing_repository_singleton.get_all_listing()
     person_id = session['person']['person_id']
 
     if form.validate_on_submit():

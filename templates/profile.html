@@ -41,7 +41,12 @@
             </div>
         {% else %}
         <div>
-            <p>No personal listings. Create a listing from the side pannel!</p></div>
+            {% if isOwner %}
+            <p>No personal listings. Create a listing from the side pannel!</p>
+            {% else %}
+            <p>{{Person.first_name}} has no listings at this time!</p>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
     

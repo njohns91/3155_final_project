@@ -1,7 +1,8 @@
 from flask import render_template, Blueprint, session, redirect, request, flash
 from src.repositories.user_repository import user_repository_singleton
 from src.repositories.listing_repository import listing_repository_singleton
-from src.models.models import db, Listing, Person
+from src.repositories.comment_repository import comment_repository_singleton
+from src.models.models import db, Person, Comment
 import os
 from werkzeug.utils import secure_filename
 from security import bcrypt
@@ -13,7 +14,7 @@ def profile(person_id): #person_id from current user session
     if 'person' not in session:
         return redirect('/')
 
-    profile_person_info = Person.query.get(person_id)
+    profile_person_info = user_repository_singleton.person_info(person_id)
     user_listings = listing_repository_singleton.get_user_listings(person_id)
     
     #Determines if user is going to own profile or someone elses
@@ -30,7 +31,7 @@ def update_profile(person_id):
         return redirect('/')
 
     user_person_id = session['person']['person_id']
-    profile_to_update = Person.query.get(person_id)
+    profile_to_update = user_repository_singleton.person_info(person_id)
 
     #Ensure user is tyring to edit own account
     isOwner = profile_to_update.person_id == user_person_id
@@ -47,7 +48,7 @@ def updates_profile(person_id):
         return redirect('/')
 
     user_person_id = session['person']['person_id']
-    profile_to_update = Person.query.get(person_id)
+    profile_to_update = user_repository_singleton.person_info(person_id)
 
     #Ensure user is tyring to edit own account
     isOwner = profile_to_update.person_id == user_person_id
@@ -65,7 +66,7 @@ def updates_profile(person_id):
         hashed_bytes = bcrypt.generate_password_hash(passw, int(os.getenv('BYCRYPT_ROUNDS')))
         profile_to_update.person_pass = hashed_bytes.decode('utf-8')
     
-
+    #Get profile picture and store it
     profile_image = request.files['updatePicture']
     
     if profile_image.filename != '':
@@ -79,6 +80,7 @@ def updates_profile(person_id):
         profile_to_update.profile_image = safe_filename
 
     try:
+        #Update profile
         db.session.commit()
         flash("Profile Updated", 'success')
         return redirect(f'/profile/{user_person_id}')
@@ -93,7 +95,7 @@ def delete(person_id):
         return redirect('/')
 
     user_person_id = session['person']['person_id']
-    profile_to_delete = Person.query.get(person_id)
+    profile_to_delete = user_repository_singleton.person_info(person_id)
 
     #Ensure user is tyring to edit own account
     isOwner = profile_to_delete.person_id == user_person_id
@@ -101,18 +103,24 @@ def delete(person_id):
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
 
-    user_listings = listing_repository_singleton.get_user_listings(person_id)
-    
-    for listing in user_listings:
-        db.session.delete(listing)
-
-    db.session.commit()
-    
     try:
+        #Delete users comments
+        user_comments = comment_repository_singleton.get_user_comments(person_id)
+        for comment in user_comments:
+            db.session.delete(comment)
+
+        #Delete users listings
+        user_listings = listing_repository_singleton.get_user_listings(person_id)
+        for listing in user_listings:
+            db.session.delete(listing)
+
+        #Delete user
         db.session.delete(profile_to_delete)
+
+        #Commit to database
         db.session.commit()
         session.clear()
-        flash('Listing deleted successfully!', 'success')
+        flash('Profile deleted successfully!', 'success')
         return redirect('/')
     except Exception as e:
         flash(f'{e}', 'error')

@@ -15,8 +15,8 @@ class Listing(db.Model):
 
     person_id = db.Column(db.Integer, \
         db.ForeignKey('person.person_id'), nullable=False)
-    listing_user = db.relationship('Person', backref='listing_person')
-    comments = db.relationship('Comment', backref='Listing')
+    person = db.relationship('Person', back_populates='listings')
+    comments = db.relationship('Comment', back_populates='listing')
 
     def __init__(self, person_id: str, listing_description: str, title: str, category: str, listing_image: str, price: int, date_posted: datetime) -> None:
         self.listing_description = listing_description
@@ -36,7 +36,8 @@ class Person(db.Model):
     profile_image = db.Column(db.String, nullable = False)
     person_pass = db.Column(db.String, nullable = False)
     bio = db.Column(db.String, nullable = False)
-    comments = db.relationship('Comment', backref='Person')
+    listings = db.relationship('Listing', back_populates='person')
+    comments = db.relationship('Comment', back_populates='person')
     
     def __init__(self, first_name: str, last_name: str, email: str, profile_image: str, person_pass: str, bio: str) -> None:
         self.first_name = first_name
@@ -54,11 +55,11 @@ class Comment(db.Model):
 
     person_id = db.Column(db.Integer, \
         db.ForeignKey('person.person_id'), nullable=False)
-    post_user = db.relationship('Person', backref='user_post')
+    person = db.relationship('Person', back_populates='comments')
 
     listing_id = db.Column(db.Integer, \
         db.ForeignKey('listing.listing_id'), nullable=False)
-    post_listing = db.relationship('Listing', backref='listed_post')
+    listing = db.relationship('Listing', back_populates='comments')
 
     def __init__(self, person_id: str, listing_id: str, date_posted: datetime, content: str) -> None:
         self.date_posted = date_posted

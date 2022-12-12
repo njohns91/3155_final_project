@@ -1,5 +1,4 @@
-from src.models.models import SQLAlchemy
-from src.models.models import db, Listing
+from src.models.models import Listing
 
 class listing_repository:
 
