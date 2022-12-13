@@ -48,7 +48,7 @@ def test_get_single_listing(test_app: FlaskClient):
     assert f'<h3>Other</h3>' in page_data
     assert f'<p>Test Listing Description</p>' in page_data
     assert f'<p class="price">$20.02</p>' in page_data
-    assert f'<p class="date-posted">{test_listing.date_posted}</p>' in page_data
+    assert f'<p class="date-posted">Posted on {test_listing.date_posted.strftime("%b %d %Y")}</p>' in page_data
 
 def test_get_single_listing_302(test_app: FlaskClient):
     #Setup

@@ -28,7 +28,7 @@ def listing_display(listing_id):
 
     person_id = session['person']['person_id']
     single_listing = listing_repository_singleton.specific_listing(listing_id)
-    listing_comments = comment_repository_singleton.get_listing_comments(listing_id)
+    listing_comments = comment_repository_singleton.get_listing_comments_sorted(listing_id)
 
     if single_listing == None:
         flash("Listing does not exsit", "error")
@@ -265,6 +265,52 @@ def update_comment(listing_id, comment_id):
         
     return redirect(f'/listing_page/{listing_id}')
 
+@router.get('/update_comment/<listing_id>/<comment_id>')
+def update_comment_page(listing_id, comment_id):
+    #Ensure user is logged in
+    if 'person' not in session:
+        return redirect('/')
+
+    person_id = session['person']['person_id']
+    single_listing = listing_repository_singleton.specific_listing(listing_id)
+    listing_comments = comment_repository_singleton.get_listing_comments_sorted(listing_id)
+    comment = comment_repository_singleton.get_single_comment(comment_id)
+
+    if single_listing == None:
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+    elif not comment:
+        flash("Comment does not exist", category="error")
+        return redirect(f'/listing_page/{listing_id}')
+    elif  person_id != comment.person_id and person_id  != comment.listing_id:
+        flash("You cannot update comment", category="error")
+    return render_template('update_comment.html', Listing=single_listing, person_id=person_id, comments=listing_comments, comment_id=comment_id)
+
+@router.post('/update_comment/<listing_id>/<comment_id>')
+def update_comment(listing_id, comment_id):
+    #Ensure user is logged in
+    if 'person' not in session:
+        return redirect('/')
+    
+    single_listing = listing_repository_singleton.specific_listing(listing_id)
+    if single_listing == None:
+        flash("Listing does not exsit", "error")
+        return redirect('/market_place')
+
+    comment = comment_repository_singleton.get_single_comment(comment_id)
+    person_id = session['person']['person_id']
+
+    if not comment:
+        flash("Comment does not exist", category="error")
+        return redirect(f'/listing_page/{listing_id}')
+    elif  person_id != comment.person_id and person_id  != comment.listing_id:
+        flash("You cannot delete comment", category="error")
+    else:
+        comment.content = request.form.get('text')
+        db.session.commit()
+        
+    return redirect(f'/listing_page/{listing_id}')
+
 @router.get('/delete_comment/<listing_id>/<comment_id>')
 def delete_comment(listing_id, comment_id):
     #Ensure user is logged in
@@ -288,7 +334,7 @@ def delete_comment(listing_id, comment_id):
         db.session.delete(comment)
         db.session.commit()
 
-    return redirect(f'/listing_page/{comment.listing_id}')
+    return redirect(f'/listing_page/{listing_id}')
 
 @router.post('/search')
 def search():
