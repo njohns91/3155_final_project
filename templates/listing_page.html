@@ -18,8 +18,8 @@
                 <p class="price">${{Listing.price}}</p>
                 <p class="date-posted">{{Listing.date_posted}}</p>
             </div>
-            <form class="input-group mb-3" method = 'POST' action="/create_comment/{{Listing.listing_id}}">
-                <input type="text" id="text" name="text" class="form-control" placeholder="Comment"/>
+            <form class="input-group mb-3" method = "POST" action="/create_comment/{{Listing.listing_id}}">
+                <input type="text" id="text" name="text" class="form-control" placeholder="Comment">
                 <button type="submit" class="btn btn-primary">Comment</button>
             </form>
             <div id="comments-{{Listing.listing_id}}">
