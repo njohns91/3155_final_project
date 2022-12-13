@@ -58,6 +58,7 @@ def updates_profile(person_id):
 
     profile_to_update.first_name = request.form.get('updateFirst')
     profile_to_update.last_name = request.form.get('updateLast')
+    profile_to_update.bio = request.form.get('updateBio')
     
     #Password Hashing
     passw = request.form.get('updatePassword')
