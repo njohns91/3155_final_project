@@ -19,7 +19,12 @@ def profile(person_id): #person_id from current user session
     
     #Determines if user is going to own profile or someone elses
     user_person_id = session['person']['person_id']
-    isOwner = profile_person_info.person_id == user_person_id
+    try:
+        isOwner = profile_person_info.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
 
     return render_template('profile.html', Person=profile_person_info, user_list=user_listings, person_id=user_person_id, isOwner = isOwner)
 
@@ -34,7 +39,13 @@ def update_profile(person_id):
     profile_to_update = user_repository_singleton.person_info(person_id)
 
     #Ensure user is tyring to edit own account
-    isOwner = profile_to_update.person_id == user_person_id
+    try:
+        isOwner = profile_to_update.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
+
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
@@ -51,7 +62,13 @@ def updates_profile(person_id):
     profile_to_update = user_repository_singleton.person_info(person_id)
 
     #Ensure user is tyring to edit own account
-    isOwner = profile_to_update.person_id == user_person_id
+    try:
+        isOwner = profile_to_update.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
+
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
@@ -99,7 +116,13 @@ def delete(person_id):
     profile_to_delete = user_repository_singleton.person_info(person_id)
 
     #Ensure user is tyring to edit own account
-    isOwner = profile_to_delete.person_id == user_person_id
+    try:
+        isOwner = profile_to_delete.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
+
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')

@@ -2,7 +2,7 @@ import pytest
 
 from app import app
 
-from tests.utils import create_person, create_listing, create_comment, refresh_db
+from tests.utils import create_person, refresh_db
 from src.models.models import Person
 
 @pytest.fixture(scope='module')

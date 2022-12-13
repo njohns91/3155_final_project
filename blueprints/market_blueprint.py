@@ -17,6 +17,14 @@ def market():
         return redirect('/')
 
     person_id = session['person']['person_id']
+
+    try:
+        user_repository_singleton.person_info(person_id).person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
+
     all_listings = listing_repository_singleton.get_all_listing()
     return render_template('market_place.html', market=all_listings, person_id=person_id)
 
@@ -96,7 +104,13 @@ def update(listing_id):
     profile_of_listing = user_repository_singleton.person_info(post_to_update.person_id)
 
     #Ensure user is tyring to edit own listing
-    isOwner = profile_of_listing.person_id == user_person_id
+    try:
+        isOwner = profile_of_listing.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
+
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
@@ -119,7 +133,12 @@ def update_item(listing_id):
     profile_of_listing = user_repository_singleton.person_info(post_to_update.person_id)
     
     #Ensure user is tyring to edit own listing
-    isOwner = profile_of_listing.person_id == user_person_id
+    try:
+        isOwner = profile_of_listing.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
@@ -166,7 +185,12 @@ def delete(listing_id):
     profile_of_listing = user_repository_singleton.person_info(post_to_delete.person_id)
 
     #Ensure user is tyring to edit own listing
-    isOwner = profile_of_listing.person_id == user_person_id
+    try:
+        isOwner = profile_of_listing.person_id == user_person_id
+    except Exception as e:
+        session.clear()
+        flash(f"You're a weird entity", 'error')
+        return redirect('/')
     if not isOwner:
         flash("Unathorized access", "error")
         return redirect(f'/profile/{user_person_id}')
