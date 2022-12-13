@@ -40,7 +40,7 @@
                                     <div class="comment-right">
                                         <form class="comment-button" method = 'GET' action="/update_comment/{{Listing.listing_id}}/{{comment.comment_id}}">
                                             <button type="submit" class="btn btn-primary comment-button">Update</button>
-                                            <a class="btn btn-primary comment-button" href="/delete_comment/{{Listing.listing_id}}/{{comment.comment_id}}" role="button">Delete</a>
+                                            <a class="btn btn-danger comment-button" href="/delete_comment/{{Listing.listing_id}}/{{comment.comment_id}}" role="button">Delete</a>
                                         </form>
                                     </div>
                                     {% endif %}

@@ -1,16 +1,9 @@
-<style>
-    h1
-    {
-        text-align: center;
-    }
-</style>
-
 {% extends '_layout_pages.html' %}
 
 {% block body %}
 
 <br>
-<h1>Update Profile</h1>
+<h1 class="text-center">Update Profile</h1>
 
 <form action="/update_profile/{{profile_to_update.person_id}}" method="post" enctype="multipart/form-data">
 

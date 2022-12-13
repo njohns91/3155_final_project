@@ -20,7 +20,6 @@
             </div>
             <form class="input-group mb-3" method = "POST" action="/create_comment/{{Listing.listing_id}}">
                 <input type="text" id="text" name="text" class="form-control" placeholder="Comment">
-
                 <button type="submit" class="btn btn-primary">Comment</button>
             </form>
             <div id="comments-{{Listing.listing_id}}">
@@ -34,15 +33,13 @@
                                         <div class="comment-left">
                                             <p class="comment-text"><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
                                         </div>
-                                        <div class="comment-update-middle">
+                                        <div class="comment-update-right">
                                             <br>
                                             <form class="input-group mb-3" method = "POST" action="/update_comment/{{Listing.listing_id}}/{{comment.comment_id}}">
                                                 <input type="text" id="text" name="text" class="form-control" value="{{comment.content}}">
-                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                <button type="submit" class="btn btn-primary">Update</button><br>
+                                                <a class="btn btn-danger" href="/listing_page/{{Listing.listing_id}}" role="button">Cancel</a>
                                             </form>
-                                        </div>
-                                        <div class="comment-update-right">
-                                            <a class="btn btn-primary" href="/listing_page/{{Listing.listing_id}}" role="button">Cancel</a>
                                         </div>
                                     </div>
                                 {% else %}
@@ -50,7 +47,7 @@
                                     <div class="comment-left">
                                         <p class="comment-text"><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
                                     </div>
-                                    <div class="comment-not-update-middle">
+                                    <div class="comment-update-right">
                                         <p class="comment-text">{{comment.content}}</p>
                                         <small class="text-muted comment-date">{{comment.date_posted.strftime("%b %d %Y, %I:%M%p")}}</small>
                                     </div>
@@ -69,6 +66,7 @@
             </div>
         </div>
     </div>
+
     <div class="listing-column-side">
         <h1>Side 1</h1>
     </div>
