@@ -28,23 +28,33 @@
                         <h4>Comments</h4>
                         {% if comments %}
                             {% for comment in comments %}
+                                {% if comment.comment_id.urn[9:] == comment_id %}
+                                    <div class="d-flex justify-content-between align-items-center single-comment">
+                                        <div class="comment-left">
+                                            <p class="comment-text"><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
+                                        </div>
+                                        <div class="comment-update-middle">
+                                            <br>
+                                            <form class="input-group mb-3" method = 'POST' action="/update_comment/{{Listing.listing_id}}/{{comment.comment_id}}">
+                                                <input type="text" id="text" name="text" class="form-control" value="{{comment.content}}"/>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </form>
+                                        </div>
+                                        <div class="comment-update-right">
+                                            <a class="btn btn-primary" href="/listing_page/{{Listing.listing_id}}" role="button">Cancel</a>
+                                        </div>
+                                    </div>
+                                {% else %}
                                 <div class="d-flex justify-content-between align-items-center single-comment">
                                     <div class="comment-left">
                                         <p class="comment-text"><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
                                     </div>
-                                    <div {% if comment.person_id == person_id %} class="comment-middle" {% else %} class="comment-not-update-middle" {% endif %}>
+                                    <div class="comment-not-update-middle">
                                         <p class="comment-text">{{comment.content}}</p>
                                         <small class="text-muted comment-date">{{comment.date_posted.strftime("%b %d %Y, %I:%M%p")}}</small>
                                     </div>
-                                    {% if comment.person_id == person_id %}
-                                    <div class="comment-right">
-                                        <form class="comment-button" method = 'GET' action="/update_comment/{{Listing.listing_id}}/{{comment.comment_id}}">
-                                            <button type="submit" class="btn btn-primary comment-button">Update</button>
-                                            <a class="btn btn-primary comment-button" href="/delete_comment/{{Listing.listing_id}}/{{comment.comment_id}}" role="button">Delete</a>
-                                        </form>
-                                    </div>
-                                    {% endif %}
                                 </div>
+                                {% endif %}
                             {% endfor %}
                         {% else %}
                             <div class="d-flex justify-content-between align-items-center">

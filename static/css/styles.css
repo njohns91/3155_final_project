@@ -193,7 +193,6 @@ form[name="create_form"] {
     font-weight: 450;
 }
 
-
 .listing-column-main .main-card .listing-description{
     display: inline-block;
     font-size: small;
@@ -210,4 +209,50 @@ form[name="create_form"] {
 
 .listing-column-side {
     visibility: hidden;
+}
+
+.single-comment{
+    padding-bottom: 15px;
+}
+
+.comment-left{
+    width: 14%;
+    text-align: left;
+    margin-right: 1%;
+}
+
+.comment-middle{
+    width:65%;
+    text-align: left;
+    margin-right: 1%;
+}
+
+.comment-right{
+    width:19%;
+    text-align: left;
+}
+
+.comment-button{
+    display: inline-block;
+}
+
+.comment-update-middle{
+    width:77%;
+    text-align: left;
+    margin-right: 1%;
+}
+
+.comment-update-right{
+    width:7%;
+    text-align: left;
+}
+
+.comment-not-update-middle{
+    width:85%;
+    text-align: left;
+}
+
+.comment-text, .comment-date{
+    margin:0px;
+    padding:0px;
 }
