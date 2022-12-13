@@ -14,9 +14,10 @@ def test_get_comments(test_app: FlaskClient):
     #Run Action
     res = client.get(f'/listing_page/{test_listing.listing_id}')
     page_data = res.data.decode()
-
+    print(page_data)
     assert res.status_code == 200
-    assert f'<p class="comment-text"><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
+    assert f'<p class="comment-text">Test Comment</p>' in page_data
 
 def test_get_comments_right_post(test_app: FlaskClient):
     #Setup
@@ -33,7 +34,8 @@ def test_get_comments_right_post(test_app: FlaskClient):
     page_data2 = res2.data.decode()
 
     assert res1.status_code == 200
-    assert f'<p class="comment-text"><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data1
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data1
+    assert f'<p class="comment-text">Test Comment</p>' in page_data1
     assert res2.status_code == 200
     assert f'<p>No Comments</p>' in page_data2
 
@@ -50,8 +52,8 @@ def test_create_comments(test_app: FlaskClient):
     page_data = res.data.decode()
 
     assert res.status_code == 200
-    assert f'<p class="comment-text"><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
-    assert '<p class="comment-text">Test Comment</p>'in page_data
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
+    assert f'<p class="comment-text">Test Comment</p>' in page_data
 
 def test_create_comment_no_text(test_app: FlaskClient):
     #Setup
@@ -146,7 +148,7 @@ def test_update_comment(test_app: FlaskClient):
     page_data = res.data.decode()
 
     assert res.status_code == 200
-    assert f'<p class="comment-text"><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
     assert '<p class="comment-text">Test Comment Updated</p>'in page_data
 
 def test_update_comment_no_text(test_app: FlaskClient):
@@ -162,7 +164,7 @@ def test_update_comment_no_text(test_app: FlaskClient):
 
     assert res.status_code == 200
     assert f'<div class="error">Comment cannot be empty.</div>' in page_data
-    assert f'<p class="comment-text"><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
+    assert f'<p><a href="/profile/{test_person.person_id}">TestFName TestLName</a>:</p>' in page_data
     assert '<p class="comment-text">Test Comment</p>'in page_data
 
 def test_update_comment_not_Owner(test_app: FlaskClient):

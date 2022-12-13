@@ -30,7 +30,7 @@
                             {% for comment in comments %}
                                 <div class="d-flex justify-content-between align-items-center single-comment">
                                     <div class="comment-left">
-                                        <p class="comment-text"><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
+                                        <p><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
                                     </div>
                                     <div {% if comment.person_id == person_id %} class="comment-middle" {% else %} class="comment-not-update-middle" {% endif %}>
                                         <p class="comment-text">{{comment.content}}</p>
