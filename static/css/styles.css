@@ -236,18 +236,7 @@ form[name="create_form"] {
     display: inline-block;
 }
 
-.comment-update-middle{
-    width:77%;
-    text-align: left;
-    margin-right: 1%;
-}
-
 .comment-update-right{
-    width:7%;
-    text-align: left;
-}
-
-.comment-not-update-middle{
     width:85%;
     text-align: left;
 }
@@ -255,4 +244,9 @@ form[name="create_form"] {
 .comment-text, .comment-date{
     margin:0px;
     padding:0px;
+}
+
+.cancel-button{
+    border-left: 1px solid black;
+    background: red;
 }
