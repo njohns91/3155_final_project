@@ -32,7 +32,7 @@
                                     <div class="comment-left">
                                         <p><a href="/profile/{{comment.person_id}}">{{comment.person.first_name + " " + comment.person.last_name}}</a>:</p>
                                     </div>
-                                    <div {% if comment.person_id == person_id %} class="comment-middle" {% else %} class="comment-not-update-middle" {% endif %}>
+                                    <div {% if comment.person_id == person_id %} class="comment-middle" {% else %} class="comment-update-right" {% endif %}>
                                         <p class="comment-text">{{comment.content}}</p>
                                         <small class="text-muted comment-date">{{comment.date_posted.strftime("%b %d %Y, %I:%M%p")}}</small>
                                     </div>
