@@ -206,8 +206,8 @@ def test_delete_listing(test_app: FlaskClient):
     res = client.get(f'/delete_listing/{test_listing.listing_id}')
     page_data = res.data.decode()
 
-    listings = listing_repository_singleton.get_all_listing()
-
+    listings = listing_repository_singleton.get_all_listing().all()
+    
     assert res.status_code == 302
     assert listings == []
 
