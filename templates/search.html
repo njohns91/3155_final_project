@@ -11,8 +11,8 @@
                     <div class="container">
                         <p>{{Listing.category}}</p>
                         <p>{{Listing.title}}</p>
-                        <p>${{Listing.price}}</p>
-                        <p>{{Listing.date_posted}}</p>
+                        <p>{{"${:0,.2f}".format(Listing.price)}}</p>
+                        <p>{{Listing.date_posted.strftime("%b %d %Y")}}</p>
                         <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
                     </div>  
                 </div>
