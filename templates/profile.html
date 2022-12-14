@@ -7,7 +7,7 @@
             {% if Person.profile_image %}
             <img src="/static/profile_images/{{Person.profile_image}}" alt="Profile-img">
             {% else %}
-            <img src="/static/profile_images/ryan-reynolds.jpeg" alt="Profile-img">
+            <img src="/static/profile_images/default.png" alt="Profile-img">
             {% endif %}
             <p>{{Person.first_name}} {{Person.last_name}}</p>
             <p><small>{{Person.bio}}</small></p>
