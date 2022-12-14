@@ -1,27 +1,32 @@
 {% extends '_layout_pages.html' %}
 
 {% block body %} 
-<div class="row">
-    <div class="listing-column-side">
-        <h1>Side 1</h1>
-    </div>
-
-    <div class="listing-column-main">
-        <div class="main-card">
+<div class="listing-column-main">
+    <div class="main-card">
+        <div class="listing-title">
             <h2>{{Listing.title}}</h2>
+        </div>
+        <div class="listing-image">
             <img src="/static/listing_images/{{Listing.listing_image}}" alt="Listing-img">
-            <h3>{{Listing.category}}</h3>
-            <div class="listing-description">
-                <p>{{Listing.listing_description}}</p>
+        </div>
+        <div class="description-container">
+            <div class="description-area">
+                <div class="listing-description">
+                    <p>{{Listing.listing_description}}</p>
+                </div>
+                <div class="price-date-labels">
+                    <p class="price">Price: {{"${:0,.2f}".format(Listing.price)}}</p>
+                    <p class="date-posted">Posted on {{Listing.date_posted.strftime("%b %d %Y")}}</p>
+                </div>
             </div>
-            <div class="price-date-labels">
-                <p class="price">{{"${:0,.2f}".format(Listing.price)}}</p>
-                <p class="date-posted">Posted on {{Listing.date_posted.strftime("%b %d %Y")}}</p>
+        </div>
+        <div class="comment-area"> 
+            <div class="form-area">
+                <form class="input-group mb-3" method = "POST" action="/create_comment/{{Listing.listing_id}}">
+                    <input type="text" id="text" name="text" class="form-control" placeholder="Comment">
+                    <button type="submit" class="btn btn-primary">Comment</button>
+                </form>
             </div>
-            <form class="input-group mb-3" method = "POST" action="/create_comment/{{Listing.listing_id}}">
-                <input type="text" id="text" name="text" class="form-control" placeholder="Comment">
-                <button type="submit" class="btn btn-primary">Comment</button>
-            </form>
             <div id="comments-{{Listing.listing_id}}">
                 <div class="card">
                     <div class="card body">
@@ -57,11 +62,9 @@
                 </div>
             </div>
         </div>
+        
     </div>
-    <div class="listing-column-side">
-        <h1>Side 1</h1>
-    </div>
-</div>
+</div> 
 {% endblock %}
 
 
