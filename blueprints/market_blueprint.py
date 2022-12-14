@@ -324,13 +324,18 @@ def search():
     if 'person' not in session:
         return redirect('/') 
 
-    form = SearchForm()
-    listings = listing_repository_singleton.get_all_listing()
-    person_id = session['person']['person_id']
+    check_seacrh = request.form.get('searched')
 
-    if form.validate_on_submit():
-        listing_searched = form.searched.data
-        listings = listings.filter(Listing.title.ilike('%' + listing_searched + '%'))
-        listings = listings.order_by(Listing.title).all()
+    if check_seacrh != '':
+        form = SearchForm()
+        listings = listing_repository_singleton.get_all_listing()
+        person_id = session['person']['person_id']
 
-        return render_template('search.html', form=form, searched = listing_searched, listings=listings, person_id=person_id)
+        if form.validate_on_submit():
+            listing_searched = form.searched.data
+            listings = listings.filter(Listing.title.ilike('%' + listing_searched + '%'))
+            listings = listings.order_by(Listing.title).all()
+
+            return render_template('search.html', form=form, searched = listing_searched, listings=listings, person_id=person_id)
+    else:
+        return render_template('search.html')
