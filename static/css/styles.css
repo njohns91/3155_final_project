@@ -250,3 +250,19 @@ form[name="create_form"] {
     border-left: 1px solid black;
     background: red;
 }
+#custom{
+        --bs-btn-color: #F0914D;
+        --bs-btn-border-color: #F0914D;
+        --bs-btn-hover-color: #F3E1D5;
+        --bs-btn-hover-bg: #F0914D;
+        --bs-btn-hover-border-color: #F0914D;
+        --bs-btn-focus-shadow-rgb: 25,135,84;
+        --bs-btn-active-color: #F3E1D5;
+        --bs-btn-active-bg: #F0914D;
+        --bs-btn-active-border-color: #F0914D;
+        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+        --bs-btn-disabled-color: #F0914D;
+        --bs-btn-disabled-bg: transparent;
+        --bs-btn-disabled-border-color: #F0914D;
+        --bs-gradient: none;
+}
