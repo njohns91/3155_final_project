@@ -30,7 +30,7 @@
                             <p>{{Listing.category}}</p>
                             <p>{{Listing.title}}</p>
                             <p>{{"${:0,.2f}".format(Listing.price)}}</p>
-                             <p>{{Listing.date_posted.strftime("%b %d %Y")}}</p>
+                            <p>{{Listing.date_posted.strftime("%b %d %Y")}}</p>
                             <a href="/listing_page/{{Listing.listing_id}}">More Info</a>
                             {% if isOwner %}
                             <a href="/update_listing/{{Listing.listing_id}}">Update</a>
