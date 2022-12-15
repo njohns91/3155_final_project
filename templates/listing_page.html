@@ -8,12 +8,11 @@
             <img src="/static/listing_images/{{Listing.listing_image}}" alt="Listing-img">
             <h3>{{Listing.category}}</h3>
             <div class="listing-description">
-                <p>{{Listing.listing_description}}</p>
+                <p class="listinig-medium">{{Listing.listing_description}}</p>
             </div>
             <div class="price-date-labels">
-                <p class="price">Price: {{"${:0,.2f}".format(Listing.price)}}</p>
-                <p class="date-posted">Posted on {{Listing.date_posted.strftime("%b %d %Y")}} by <a href="/profile/{{Listing.person_id}}">{{Listing.person.first_name + " " + Listing.person.last_name}}
-                </p>
+                <p class="price listinig-medium">Price: {{"${:0,.2f}".format(Listing.price)}}</p>
+                <p class="date-posted">Posted on {{Listing.date_posted.strftime("%b %d %Y")}} by <a href="/profile/{{Listing.person_id}}">{{Listing.person.first_name + " " + Listing.person.last_name}}</a></p>
             </div>
             <form class="input-group mb-3" method = "POST" action="/create_comment/{{Listing.listing_id}}">
                 <input type="text" id="text" name="text" class="form-control" placeholder="Comment">
