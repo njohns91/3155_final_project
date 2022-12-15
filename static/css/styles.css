@@ -82,12 +82,10 @@ form[name="create_form"] {
 }
 
 .column .card img {
-    float: left;
     width: 225px;
-    height: 225px;
     object-fit: contain;
-    padding: 0;
-    margin: 0;
+    padding: auto;
+    margin: auto;
 }
 
 .card {
@@ -180,7 +178,6 @@ form[name="create_form"] {
 
 .listing-column-main .main-card img {
     width: 700px;
-    height: 700px;
     object-fit: contain;
     object-position: center;
     border-top-left-radius: 4px;
@@ -218,6 +215,10 @@ form[name="create_form"] {
 .single-comment{
     padding-bottom: 15px;
     width: auto;
+}
+
+.listinig-medium{
+    font-size: large;
 }
 
 .comment-left{
